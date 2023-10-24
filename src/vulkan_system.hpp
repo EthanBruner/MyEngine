@@ -1,38 +1,42 @@
 #pragma once
 
 #include "window.hpp"
-#include "vertex_obj.hpp"
+#include "buffer_objects.hpp"
 
-#include <glm/gtx/hash.hpp>
-#include <unordered_map>
-
-#include <array>
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
 #include <algorithm>
+#include <chrono>
 #include <vector>
 #include <cstring>
 #include <cstdlib>
 #include <cstdint>
 #include <limits>
+#include <array>
 #include <optional>
 #include <set>
 
+
 namespace engine {
+
+    const std::string MODEL_PATH = "assests/viking_room.obj";
+    const std::string TEXTURE_PATH = "assests/viking_room.png";
+
+    const std::vector<const char*> validationLayers = {
+        "VK_LAYER_KHRONOS_validation"
+    };
+
+    const std::vector<const char*> deviceExtensions = {
+        VK_KHR_SWAPCHAIN_EXTENSION_NAME
+    };
+
 #ifdef NDEBUG
     const bool enableValidationLayers = false;
 #else
     const bool enableValidationLayers = true;
 #endif
 
-    const std::vector<const char*> validationLayers = {
-    "VK_LAYER_KHRONOS_validation"
-    };
-
-    const std::vector<const char*> deviceExtensions = {
-        VK_KHR_SWAPCHAIN_EXTENSION_NAME
-    };
 
     struct QueueFamilyIndices {
         std::optional<uint32_t> graphicsFamily;
@@ -49,12 +53,40 @@ namespace engine {
         std::vector<VkPresentModeKHR> presentModes;
     };
 
+
+
 	class VulkanSystem {
 	public:
-        VkDevice device;
-
-        VulkanSystem(Window& window, const char* vertexPath, const char* fragmentPath);
+        VulkanSystem(Window& window, const char* vertexPath, const char* fragmentPath) : window{ window } {
+            createInstance();
+            setupDebugMessenger();
+            createSurface();
+            pickPhysicalDevice();
+            createLogicalDevice();
+            createSwapChain();
+            createImageViews();
+            createRenderPass();
+            createDescriptorSetLayout();
+            createGraphicsPipeline(vertexPath, fragmentPath);
+            createCommandPool();
+            createColorResources();
+            createDepthResources();
+            createFramebuffers();
+            createTextureImage();
+            createTextureImageView();
+            createTextureSampler();
+            loadModel();
+            createVertexBuffer();
+            createIndexBuffer();
+            createUniformBuffers();
+            createDescriptorPool();
+            createDescriptorSets();
+            createCommandBuffers();
+            createSyncObjects();
+        };
         ~VulkanSystem();
+
+        VkDevice getDevice() { return device; };
 
         void drawFrame();
 
@@ -62,12 +94,14 @@ namespace engine {
 	private:
         Window& window;
 
+        VkDevice device;
+
         VkInstance instance;
         VkDebugUtilsMessengerEXT debugMessenger;
         VkSurfaceKHR surface;
 
         VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
-        
+        VkSampleCountFlagBits msaaSamples = VK_SAMPLE_COUNT_1_BIT;
 
         VkQueue graphicsQueue;
         VkQueue presentQueue;
@@ -81,25 +115,46 @@ namespace engine {
         const int MAX_FRAMES_IN_FLIGHT = 2;
 
         VkRenderPass renderPass;
+        VkDescriptorSetLayout descriptorSetLayout;
         VkPipelineLayout pipelineLayout;
         VkPipeline graphicsPipeline;
 
+        VkCommandPool commandPool;
+
+        VkImage colorImage;
+        VkDeviceMemory colorImageMemory;
+        VkImageView colorImageView;
+
+        VkImage depthImage;
+        VkDeviceMemory depthImageMemory;
+        VkImageView depthImageView;
+
+        uint32_t mipLevels;
+        VkImage textureImage;
+        VkDeviceMemory textureImageMemory;
+        VkImageView textureImageView;
+        VkSampler textureSampler;
+
+        std::vector<VertexObject> vertices;
+        std::vector<uint32_t> indices;
         VkBuffer vertexBuffer;
         VkDeviceMemory vertexBufferMemory;
         VkBuffer indexBuffer;
         VkDeviceMemory indexBufferMemory;
 
-        VkCommandPool commandPool;
+        std::vector<VkBuffer> uniformBuffers;
+        std::vector<VkDeviceMemory> uniformBuffersMemory;
+        std::vector<void*> uniformBuffersMapped;
+
+        VkDescriptorPool descriptorPool;
+        std::vector<VkDescriptorSet> descriptorSets;
+
         std::vector<VkCommandBuffer> commandBuffers;
 
         std::vector<VkSemaphore> imageAvailableSemaphores;
         std::vector<VkSemaphore> renderFinishedSemaphores;
         std::vector<VkFence> inFlightFences;
         uint32_t currentFrame = 0;
-
-
-        std::vector<VertexObject> vertices{};
-        std::vector<uint32_t> indices{};
 
         // Vulkan Initiation Functions
         void createInstance();
@@ -118,11 +173,25 @@ namespace engine {
         void createImageViews();
         void createRenderPass();
 
-        void createGraphicsPipeline(const std::string vertexPath, const std::string fragmentPath);
+        void createDescriptorSetLayout();
+        void createGraphicsPipeline(const char* vertexPath, const char* fragmentPath);
         
         void createFramebuffers();
-
         void createCommandPool();
+        void createColorResources();
+        void createDepthResources();
+
+        void createTextureImage();
+        void createTextureImageView();
+        void createTextureSampler();
+
+        void createUniformBuffers();
+        void updateUniformBuffer(uint32_t currentImage);
+
+        void createDescriptorPool();
+        void createDescriptorSets();
+
+
         void createCommandBuffers();
         void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
         void createSyncObjects();
@@ -134,9 +203,26 @@ namespace engine {
         void createIndexBuffer();
         void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 
+        void generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
+
 
 
         // Vulkan Helper Functions
+        VkCommandBuffer beginSingleTimeCommands();
+        void endSingleTimeCommands(VkCommandBuffer commandBuffer);
+
+        void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
+
+        void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
+
+        VkSampleCountFlagBits getMaxUsableSampleCount();
+
+        void createImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
+        VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels);
+
+        VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+        VkFormat findDepthFormat();
+
         uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
         VkShaderModule createShaderModule(const std::vector<char>& code);
@@ -155,15 +241,6 @@ namespace engine {
         bool checkValidationLayerSupport();
 
         static std::vector<char> readFile(const std::string& filename);
-	};
-}
 
-namespace std {
-    template<> struct hash < engine::VertexObject > {
-        size_t operator()(engine::VertexObject const& vertex) const {
-            return ((hash<glm::vec3>()(vertex.position) ^
-                (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^
-                (hash<glm::vec2>()(vertex.texCoord) << 1);
-        }
-    };
+	};
 }

@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 int main() {
-    engine::App app;
+    engine::App app {};
 
     try {
         app.run();
