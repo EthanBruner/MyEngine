@@ -21,9 +21,9 @@ namespace engine {
 		Scene() : entityComponentManager{ std::make_unique<EntityComponentManager>() }, systemManager{ std::make_unique<SystemManager>() } {};
 		~Scene() {};
 
-		//--------------------------------------------//
-		// EntityComponentManager Shorthand Functions //
-		//--------------------------------------------//
+		  //----------------------------------//
+		 // EntityComponentManager Functions //
+		//----------------------------------//
 		template<typename T>
 		void registerComponent() {
 			entityComponentManager->registerComponent<T>();
@@ -33,7 +33,19 @@ namespace engine {
 		template<typename... T>
 		Entity& createEntity(Component<T>&&... comps) {
 			return entityComponentManager->createEntity(std::forward<Component<T>>(comps)...);
-			
+		}
+
+
+
+		  //-------------------------//
+		 // SystemManager Functions //
+	    //-------------------------//
+		void registerSystem() {
+
+		}
+
+		void runSystems() {
+
 		}
 
 	private:

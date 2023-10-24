@@ -99,6 +99,22 @@ namespace engine {
 			return componentToEntityMap[id];
 		}
 
+
+		template<typename T>
+		std::shared_ptr<ComponentContainer<T>> getComponentContainer() {
+			const char* containerType = getTypeName<T>();
+
+			if (auto search = componentContainerPool.find(containerType); search != componentContainerPool.end()) {
+				return std::static_pointer_cast<ComponentContainer<T>>(componentContainerPool[containerType]);
+			}
+			else {
+				throw std::runtime_error("SceneError: tried to find a container for an unregisterd component type...' ");
+			}
+		}
+		std::shared_ptr<ComponentContainer<std::any>> getComponentContainer(ContainerTypeName containerType) {
+			return std::static_pointer_cast<ComponentContainer<std::any>>(componentContainerPool[containerType]);
+		}
+
 	private:
 		  //------------------------//
 		 //      Entity Data       //
@@ -119,22 +135,6 @@ namespace engine {
 
 		void assertEntityExists(Entity entity) {
 			assert(std::find(entities.begin(), entities.end(), entity) != entities.end() && "EntityComponentManagerError: entity does not exist ");
-		}
-
-		template<typename T>
-		std::shared_ptr<ComponentContainer<T>> getComponentContainer() {
-			const char* containerType = getTypeName<T>();
-
-			if (auto search = componentContainerPool.find(containerType); search != componentContainerPool.end()) {
-				return std::static_pointer_cast<ComponentContainer<T>>(componentContainerPool[containerType]);
-			}
-			else {
-				throw std::runtime_error("SceneError: tried to find a container for an unregisterd component type...' ");
-			}
-		}
-
-		std::shared_ptr<ComponentContainer<std::any>> getComponentContainer(ContainerTypeName containerType) {
-			return std::static_pointer_cast<ComponentContainer<std::any>>(componentContainerPool[containerType]);
 		}
 	};
 }

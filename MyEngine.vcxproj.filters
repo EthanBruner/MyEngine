@@ -62,5 +62,14 @@
     <ClInclude Include="src\buffer_objects.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ecs\system.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\frag.spv" />
+    <None Include="shaders\simple.frag" />
+    <None Include="shaders\simple.vert" />
+    <None Include="shaders\vert.spv" />
   </ItemGroup>
 </Project>
