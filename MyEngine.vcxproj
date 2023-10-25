@@ -21,12 +21,12 @@
   <ItemGroup>
     <ClCompile Include="src\app.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\vulkan_system.cpp" />
-    <ClCompile Include="src\window.cpp" />
+    <ClCompile Include="src\systems\graphics\vulkan_system.cpp" />
+    <ClCompile Include="src\systems\graphics\window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\app.hpp" />
-    <ClInclude Include="src\buffer_objects.hpp" />
+    <ClInclude Include="src\systems\graphics\buffer_objects.hpp" />
     <ClInclude Include="src\ecs\component.hpp" />
     <ClInclude Include="src\ecs\component_container.hpp" />
     <ClInclude Include="src\ecs\ecsUtils.hpp" />
@@ -34,9 +34,9 @@
     <ClInclude Include="src\ecs\scene.hpp" />
     <ClInclude Include="src\ecs\system.hpp" />
     <ClInclude Include="src\ecs\system_manager.hpp" />
-    <ClInclude Include="src\vertex_obj.hpp" />
-    <ClInclude Include="src\vulkan_system.hpp" />
-    <ClInclude Include="src\window.hpp" />
+    <ClInclude Include="src\systems\graphics\vertex_obj.hpp" />
+    <ClInclude Include="src\systems\graphics\vulkan_system.hpp" />
+    <ClInclude Include="src\systems\graphics\window.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\frag.spv" />

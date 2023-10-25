@@ -4,6 +4,6 @@
 namespace engine {
 
 	class System {
-		virtual void run() = 0;
+		virtual void update() = 0;
 	};
 }

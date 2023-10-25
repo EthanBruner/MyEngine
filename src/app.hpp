@@ -1,7 +1,7 @@
 #pragma once
 
-#include "window.hpp"
-#include "vulkan_system.hpp"
+#include "systems/graphics/window.hpp"
+#include "systems/graphics/vulkan_system.hpp"
 #include "ecs/scene.hpp"
 #include "ecs/component.hpp"
 #include "ecs/entity_component_manager.hpp"

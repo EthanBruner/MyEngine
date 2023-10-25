@@ -15,42 +15,17 @@
 
 namespace engine {
 
-	// General Manarger and Interface for the Entity Compnent System
-	class Scene {
+	// Interface for the Entity Compnent System
+	class Scene: public EntityComponentManager, public SystemManager {
 	public:
-		Scene() : entityComponentManager{ std::make_unique<EntityComponentManager>() }, systemManager{ std::make_unique<SystemManager>() } {};
+		Scene() {};
 		~Scene() {};
 
-		  //----------------------------------//
-		 // EntityComponentManager Functions //
-		//----------------------------------//
-		template<typename T>
-		void registerComponent() {
-			entityComponentManager->registerComponent<T>();
-		}
+		using EntityComponentManager::createEntity;
+		using EntityComponentManager::registerComponent;
 
-
-		template<typename... T>
-		Entity& createEntity(Component<T>&&... comps) {
-			return entityComponentManager->createEntity(std::forward<Component<T>>(comps)...);
-		}
-
-
-
-		  //-------------------------//
-		 // SystemManager Functions //
-	    //-------------------------//
-		void registerSystem() {
-
-		}
-
-		void runSystems() {
-
-		}
-
+		
 	private:
-		std::unique_ptr <EntityComponentManager> entityComponentManager;
-		std::unique_ptr<SystemManager> systemManager;
 
 	};
 }

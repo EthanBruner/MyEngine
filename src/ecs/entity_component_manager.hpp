@@ -12,7 +12,7 @@
 
 namespace engine {
 	class EntityComponentManager {
-	public:
+	protected:
 		EntityComponentManager() {};
 		~EntityComponentManager() {};
 
@@ -44,28 +44,6 @@ namespace engine {
 			return entities.back();
 		}
 
-
-		template<typename T>
-		void bindComponent(Entity entity, Component<T> component) {
-			assertEntityExists(entity);
-
-			// Generate an id for the component 
-			if (!freeComponentIds.empty()) {
-				component.setId(freeComponentIds.back());
-				freeComponentIds.pop_back();
-			}
-			else {
-				component.setId(nextAvalibleId++);
-			}
-			auto id = component.getId();
-			auto componentType = getTypeName<T>();
-
-			// Bind component
-			getComponentContainer<T>()->add(id, component);
-			entityOwnershipMap[entity].emplace(id, componentType);
-			componentToEntityMap.emplace(id, entity);
-		}
-		
 
 		void removeEntity(Entity entity) {
 			assertEntityExists(entity);
@@ -115,6 +93,7 @@ namespace engine {
 			return std::static_pointer_cast<ComponentContainer<std::any>>(componentContainerPool[containerType]);
 		}
 
+
 	private:
 		  //------------------------//
 		 //      Entity Data       //
@@ -126,7 +105,6 @@ namespace engine {
 		  //------------------------//
 		 //     Component Data     //
 		//------------------------//
-		ComponentId nextAvalibleId = 0;
 		std::vector<ComponentId> freeComponentIds{};
 		std::unordered_map<ComponentId, Entity> componentToEntityMap{};
 		std::unordered_map<ContainerTypeName, std::shared_ptr<BaseComponentContainer>> componentContainerPool{};
@@ -135,6 +113,30 @@ namespace engine {
 
 		void assertEntityExists(Entity entity) {
 			assert(std::find(entities.begin(), entities.end(), entity) != entities.end() && "EntityComponentManagerError: entity does not exist ");
+		}
+
+
+		template<typename T>
+		void bindComponent(Entity entity, Component<T> component) {
+			assertEntityExists(entity);
+			static std::size_t nextAvalibleId = 0;
+
+			// Generate an id for the component 
+			if (!freeComponentIds.empty()) {
+				component.setId(freeComponentIds.back());
+				freeComponentIds.pop_back();
+			}
+			else {
+				component.setId(nextAvalibleId);
+				nextAvalibleId++;
+			}
+			auto id = component.getId();
+			auto componentType = getTypeName<T>();
+
+			// Bind component
+			getComponentContainer<T>()->add(id, component);
+			entityOwnershipMap[entity].emplace(id, componentType);
+			componentToEntityMap.emplace(id, entity);
 		}
 	};
 }
