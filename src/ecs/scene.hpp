@@ -5,24 +5,26 @@
 #include "system_manager.hpp"
 
 #include <iostream>
-#include <typeinfo>
-#include <memory>
-#include <set>
-#include <unordered_map>
-#include <stdexcept>
-#include <string>
 
 
 namespace engine {
 
-	// Interface for the Entity Compnent System
-	class Scene: public EntityComponentManager, public SystemManager {
+	/* Interface for the Entity Compnent System
+	and liaison for entities and systems. */
+	class Scene: protected EntityComponentManager, protected SystemManager {
 	public:
 		Scene() {};
 		~Scene() {};
 
 		using EntityComponentManager::createEntity;
 		using EntityComponentManager::registerComponent;
+		using EntityComponentManager::registerComponentList;
+
+		using SystemManager::insertSystem;
+		using SystemManager::update;
+
+
+
 
 		
 	private:

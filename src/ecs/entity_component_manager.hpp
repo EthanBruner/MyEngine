@@ -13,6 +13,11 @@
 namespace engine {
 	class EntityComponentManager {
 	protected:
+		 //     Exposed Data     //
+		std::unordered_map<ComponentId, Entity> componentToEntityMap{};
+		std::unordered_map<ContainerTypeName, std::shared_ptr<BaseComponentContainer>> componentContainerPool{};
+
+
 		EntityComponentManager() {};
 		~EntityComponentManager() {};
 
@@ -20,6 +25,11 @@ namespace engine {
 		template<typename T>
 		void registerComponent() {
 			componentContainerPool.emplace(getTypeName<T>(), std::make_shared<ComponentContainer<T>>());
+		}
+
+		template<typename... T>
+		void registerComponentList() {
+			([&] { registerComponent<T>(); }(), ...);
 		}
 
 
@@ -94,21 +104,13 @@ namespace engine {
 		}
 
 
+
 	private:
-		  //------------------------//
-		 //      Entity Data       //
-		//------------------------//
 		std::vector<Entity> entities{};
 		std::vector<Entity> freeEntities{};
 		std::unordered_map<Entity, std::unordered_map<ComponentId, ContainerTypeName>> entityOwnershipMap{};
 
-		  //------------------------//
-		 //     Component Data     //
-		//------------------------//
 		std::vector<ComponentId> freeComponentIds{};
-		std::unordered_map<ComponentId, Entity> componentToEntityMap{};
-		std::unordered_map<ContainerTypeName, std::shared_ptr<BaseComponentContainer>> componentContainerPool{};
-
 
 
 		void assertEntityExists(Entity entity) {

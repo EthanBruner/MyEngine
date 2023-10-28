@@ -21,10 +21,10 @@
     <ClCompile Include="src\app.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\systems\graphics\window.cpp">
+    <ClCompile Include="src\vulkan\window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\systems\graphics\vulkan_system.cpp">
+    <ClCompile Include="src\vulkan\vulkan_pipeline.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,13 +32,13 @@
     <ClInclude Include="src\app.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\systems\graphics\window.hpp">
+    <ClInclude Include="src\vulkan\window.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\systems\graphics\vulkan_system.hpp">
+    <ClInclude Include="src\vulkan\vulkan_pipeline.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\systems\graphics\vertex_obj.hpp">
+    <ClInclude Include="src\vulkan\vertex_obj.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ecs\component.hpp">
@@ -59,10 +59,13 @@
     <ClInclude Include="src\ecs\system_manager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\systems\graphics\buffer_objects.hpp">
+    <ClInclude Include="src\vulkan\buffer_objects.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ecs\system.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\test_system.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

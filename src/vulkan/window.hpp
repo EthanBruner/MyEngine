@@ -7,6 +7,7 @@
 namespace engine {
 	class Window {
 	public:
+		Window() : width{ 0 }, height{ 0 }, windowName{ "" } { initWindow(); };
 		Window(int w, int h, std::string name);
 		~Window();
 
@@ -29,7 +30,6 @@ namespace engine {
 
 	private:
 		static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
-
 
 		void initWindow();
 

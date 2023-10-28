@@ -3,7 +3,8 @@
 #include "ecsUtils.hpp"
 #include "system.hpp"
 
-#include <unordered_map>
+#include <any>
+#include <iostream>
 #include <vector>
 #include <memory>
 
@@ -14,17 +15,19 @@ namespace engine {
 		SystemManager() {};
 		~SystemManager() {};
 
-		template<typename T, typename... ExpectedComponents>
-		void registerSystem(ExpectedComponents&&... componentTypes) {
-			systems.emplace(getTypeName<T>(), std::make_unique<T>());
+		template <typename T, typename... Args>
+		void insertSystem(Args... args) {
+			auto system = std::static_pointer_cast<System>(std::make_shared<T>(std::forward<Args>(args)...));
+			systems.emplace_back(system);
 		}
 
 		void update() {
-
+			for (auto& sys : systems) {
+				sys->update();
+			}
 		}
 
 	private:
-		std::unordered_map<SystemName, std::unique_ptr<System>> systems{};
-		std::unordered_map <ComponentTypeName, std::vector<SystemName>> systemExpectations;
+		std::vector<std::shared_ptr<System>> systems{};
 	};
 }

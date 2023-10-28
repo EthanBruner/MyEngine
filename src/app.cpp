@@ -1,19 +1,21 @@
 #include "app.hpp"
 
 #include <iostream>
+#include "test_system.hpp"
 
 using namespace engine;
 
 void App::run() {
 
-    scene.registerComponent<Transform>();
-    scene.registerComponent<Empty>();
+    scene.insertSystem<TestSystem>(10,20);
 
-    auto entity = scene.createEntity(Transform(), Transform(), Empty());
+    scene.registerComponentList<Transform, Empty>();
+
+    auto entity = scene.createEntity(Transform(), Empty());
 
     while (!glfwWindowShouldClose(window.getGLFWwindow())) {
         glfwPollEvents();
-        vulkan.drawFrame();
+        scene.update();
 
     }
 

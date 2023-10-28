@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../../src/ecs/system.hpp"
 #include "window.hpp"
 #include "buffer_objects.hpp"
 
@@ -54,10 +55,9 @@ namespace engine {
     };
 
 
-
-	class VulkanSystem {
+	class VulkanPipeline {
 	public:
-        VulkanSystem(Window& window, const char* vertexPath, const char* fragmentPath) : window{ window } {
+        VulkanPipeline(Window& window, const char* vertexPath, const char* fragmentPath) : window{ window } {
             createInstance();
             setupDebugMessenger();
             createSurface();
@@ -84,12 +84,12 @@ namespace engine {
             createCommandBuffers();
             createSyncObjects();
         };
-        ~VulkanSystem();
+        ~VulkanPipeline();
 
         VkDevice getDevice() { return device; };
 
-        void drawFrame();
-
+        // Draws the frame
+        virtual void update();
 
 	private:
         Window& window;
