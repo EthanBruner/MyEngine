@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ecsUtils.hpp"
+#include "utils.hpp"
 #include "component.hpp"
 
 #include <vector>

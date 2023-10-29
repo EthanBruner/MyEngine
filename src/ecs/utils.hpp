@@ -14,6 +14,7 @@ namespace engine {
 	using ComponentTypeName = const char*;
 	using ComponentId = std::size_t;
 
+
 	// --- Systems --- //
 	using SystemName = const char*;
 

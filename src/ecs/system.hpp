@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ecsUtils.hpp"
+#include "utils.hpp"
 #include "component.hpp"
 
 #include <memory>
@@ -9,6 +9,6 @@ namespace engine {
 
 	class System {
 	public:
-		virtual void update(std::shared_ptr<ContainerPool> containerPool) = 0;
+		virtual void update() = 0;
 	};
 }

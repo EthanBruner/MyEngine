@@ -53,13 +53,7 @@
     <ClInclude Include="src\ecs\ecsUtils.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ecs\entity_component_manager.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ecs\scene.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ecs\system_manager.hpp">
+    <ClInclude Include="src\ecs\entity_component_system.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\vulkan\buffer_objects.hpp">

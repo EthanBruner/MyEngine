@@ -1,6 +1,6 @@
 #pragma once 
 
-#include "ecsUtils.hpp"
+#include "utils.hpp"
 #include "systems/graphics_objects.hpp"
 
 #include <glm/glm.hpp>

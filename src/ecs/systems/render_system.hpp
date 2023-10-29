@@ -10,7 +10,7 @@ namespace engine {
 		RenderSystem() {};
 		~RenderSystem() {};
 
-		virtual void update(std::shared_ptr<ContainerPool> containerPool) {
+		virtual void update() {
 		}
 		
 	private:

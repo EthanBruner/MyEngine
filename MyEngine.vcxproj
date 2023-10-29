@@ -33,10 +33,8 @@
     <ClInclude Include="src\ecs\component.hpp" />
     <ClInclude Include="src\ecs\component_container.hpp" />
     <ClInclude Include="src\ecs\ecsUtils.hpp" />
-    <ClInclude Include="src\ecs\entity_component_manager.hpp" />
-    <ClInclude Include="src\ecs\scene.hpp" />
+    <ClInclude Include="src\ecs\entity_component_system.hpp" />
     <ClInclude Include="src\ecs\system.hpp" />
-    <ClInclude Include="src\ecs\system_manager.hpp" />
     <ClInclude Include="src\vulkan\vertex_obj.hpp" />
     <ClInclude Include="src\vulkan\vulkan_pipeline.hpp" />
     <ClInclude Include="src\vulkan\window.hpp" />
