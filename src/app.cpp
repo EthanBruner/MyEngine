@@ -8,7 +8,6 @@ using namespace engine;
 void App::run() {
 
     scene.insertSystem<TestSystem>(10,20);
-
     scene.registerComponentList<Transform, Empty>();
 
     auto entity = scene.createEntity(Transform(), Empty());
@@ -17,6 +16,7 @@ void App::run() {
         glfwPollEvents();
         scene.update();
 
+        vulkan.update();
     }
 
     vkDeviceWaitIdle(vulkan.getDevice());

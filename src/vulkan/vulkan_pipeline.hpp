@@ -75,7 +75,7 @@ namespace engine {
             createTextureImage();
             createTextureImageView();
             createTextureSampler();
-            loadModel();
+            loadModel(); // 
             createVertexBuffer();
             createIndexBuffer();
             createUniformBuffers();

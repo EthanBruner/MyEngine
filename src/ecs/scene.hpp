@@ -9,11 +9,12 @@
 
 namespace engine {
 
-	/* Interface for the Entity Compnent System
-	and liaison for entities and systems. */
+	/* Interface for the ECS */
 	class Scene: protected EntityComponentManager, protected SystemManager {
 	public:
-		Scene() {};
+		Scene() {
+			SystemManager::bindComponentContainerPool(EntityComponentManager::getComponentContainerPool());
+		};
 		~Scene() {};
 
 		using EntityComponentManager::createEntity;
@@ -24,9 +25,6 @@ namespace engine {
 		using SystemManager::update;
 
 
-
-
-		
 	private:
 
 	};

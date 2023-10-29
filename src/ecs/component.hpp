@@ -1,6 +1,7 @@
 #pragma once 
 
 #include "ecsUtils.hpp"
+#include "systems/graphics_objects.hpp"
 
 #include <glm/glm.hpp>
 
@@ -11,32 +12,13 @@
 
 namespace engine {
 
-	// NOTE: component<T> likly no longer needs to store its id as it's being managed by the EntityComponentManager
 	template<typename T>
-	struct Component {
-	public:
+	struct Component {};
 
-		void setId(ComponentId componentIdNumber) {
-			if (idHasBeenSet) {
-				throw std::runtime_error("ComponentError: Cannot use setId() on a component multiple times...");
-			}
-			else {
-				id = componentIdNumber;
-				idHasBeenSet = false;
-			}
-		};
-
-		ComponentId& getId() { return id; };
-
-	private:
-		ComponentId id = 0;
-		bool idHasBeenSet = false;
-	};
-
+	struct Empty : public Component<Empty> {};
 
 
 	struct Transform : public Component<Transform> {
-	public:
 		glm::vec3 position;
 		glm::vec3 rotation;
 		float scale;
@@ -48,8 +30,11 @@ namespace engine {
 	};
 
 
-	struct Empty : public Component<Empty> {
-		void* null;
+	struct Mesh : public Component<Mesh> {
+		std::vector<Vertex> vertices;
+		std::vector<int> indices;
 	};
+
+
 
 };

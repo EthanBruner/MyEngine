@@ -21,11 +21,14 @@
   <ItemGroup>
     <ClCompile Include="src\app.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\ecs\systems\render_system.cpp" />
     <ClCompile Include="src\vulkan\vulkan_pipeline.cpp" />
     <ClCompile Include="src\vulkan\window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\app.hpp" />
+    <ClInclude Include="src\ecs\systems\graphics_objects.hpp" />
+    <ClInclude Include="src\ecs\systems\render_system.hpp" />
     <ClInclude Include="src\vulkan\buffer_objects.hpp" />
     <ClInclude Include="src\ecs\component.hpp" />
     <ClInclude Include="src\ecs\component_container.hpp" />

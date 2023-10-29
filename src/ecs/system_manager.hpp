@@ -21,13 +21,20 @@ namespace engine {
 			systems.emplace_back(system);
 		}
 
+
+		void bindComponentContainerPool(std::shared_ptr<ContainerPool> pool) {
+			componentContainerPool = pool;
+		}
+
+
 		void update() {
 			for (auto& sys : systems) {
-				sys->update();
+				sys->update(componentContainerPool);
 			}
 		}
 
 	private:
 		std::vector<std::shared_ptr<System>> systems{};
+		std::shared_ptr<ContainerPool> componentContainerPool;
 	};
 }

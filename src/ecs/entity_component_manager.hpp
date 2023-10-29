@@ -13,11 +13,6 @@
 namespace engine {
 	class EntityComponentManager {
 	protected:
-		 //     Exposed Data     //
-		std::unordered_map<ComponentId, Entity> componentToEntityMap{};
-		std::unordered_map<ContainerTypeName, std::shared_ptr<BaseComponentContainer>> componentContainerPool{};
-
-
 		EntityComponentManager() {};
 		~EntityComponentManager() {};
 
@@ -104,12 +99,18 @@ namespace engine {
 		}
 
 
+		std::shared_ptr<ContainerPool> getComponentContainerPool() {
+			return std::make_shared<ContainerPool>(componentContainerPool);
+		}
+
 
 	private:
 		std::vector<Entity> entities{};
 		std::vector<Entity> freeEntities{};
 		std::unordered_map<Entity, std::unordered_map<ComponentId, ContainerTypeName>> entityOwnershipMap{};
 
+		ContainerPool componentContainerPool{};
+		std::unordered_map<ComponentId, Entity> componentToEntityMap{};
 		std::vector<ComponentId> freeComponentIds{};
 
 
@@ -121,19 +122,18 @@ namespace engine {
 		template<typename T>
 		void bindComponent(Entity entity, Component<T> component) {
 			assertEntityExists(entity);
-			static std::size_t nextAvalibleId = 0;
+			auto componentType = getTypeName<T>();
 
-			// Generate an id for the component 
+			// Generate Component id
+			static std::size_t nextAvalibleId = 0;
+			std::size_t id;
 			if (!freeComponentIds.empty()) {
-				component.setId(freeComponentIds.back());
+				id = freeComponentIds.back();
 				freeComponentIds.pop_back();
 			}
 			else {
-				component.setId(nextAvalibleId);
-				nextAvalibleId++;
+				id = nextAvalibleId++;
 			}
-			auto id = component.getId();
-			auto componentType = getTypeName<T>();
 
 			// Bind component
 			getComponentContainer<T>()->add(id, component);

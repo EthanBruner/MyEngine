@@ -15,9 +15,9 @@ namespace engine {
 		void run();
 
 	private:
+		Scene scene{};
 		Window window { 800, 600, "A Window" };
 		VulkanPipeline vulkan{ window, "shaders\\vert.spv", "shaders\\frag.spv" };
-		Scene scene{};
 
 	};
 }
