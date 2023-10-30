@@ -1,7 +1,10 @@
 #pragma once
 
-#include "vulkan/window.hpp"
-#include "vulkan/vulkan_pipeline.hpp"
+//#include "systems/graphics/vulkan/window.hpp"
+//#include "systems/graphics/vulkan/vulkan_system.hpp"
+
+#include "systems/graphics/vulkan_system/vulkan_system.hpp"
+
 
 #include "ecs/entity_component_system.hpp"
 #include "ecs/component.hpp"
@@ -16,8 +19,8 @@ namespace engine {
 
 	private:
 		EntityComponentSystem scene{};
-		Window window { 800, 600, "A Window" };
-		VulkanPipeline vulkan{ window, "shaders\\vert.spv", "shaders\\frag.spv" };
+		//Window window { 800, 600, "A Window" };
+		//VulkanSystem vulkan{ window, "shaders\\vert.spv", "shaders\\frag.spv" };
 
 	};
 }

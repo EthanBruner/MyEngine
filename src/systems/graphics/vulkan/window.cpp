@@ -22,8 +22,8 @@ void Window::framebufferResizeCallback(GLFWwindow* window, int width, int height
 
 void Window::initWindow() {
 	glfwInit();
-	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); // Prevents creation of OpenGl context
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API); // Prevents creation of OpenGl context
 
 	window = glfwCreateWindow(width, height, windowName.c_str(), nullptr, nullptr);
 	glfwSetWindowUserPointer(window, this);

@@ -22,4 +22,14 @@ namespace engine {
 	// --- Misc. --- //
 	template <typename T>
 	const char* getTypeName() { return typeid(T).name(); };
+
+
+
+	// IDK about this
+	#define typelist(Name,...) \
+		enum Name##Req { __VA_ARGS__ }; \
+		namespace { const std::initializer_list<Name##Req> Name##List { __VA_ARGS__ }; };
+
+	#define SysRequirementsFor(Name) \
+		const std::initializer_list<Name##Req> systemRequirements = Name##List
 }

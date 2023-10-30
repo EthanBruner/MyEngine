@@ -12,12 +12,11 @@
 
 
 namespace engine {
-	using ContainerPool = std::unordered_map<ContainerTypeName, std::shared_ptr<BaseComponentContainer>>;
 	using EntityOnwershipMap = std::unordered_map<Entity, std::unordered_map<ComponentId, ContainerTypeName>>;
 
 	class EntityComponentSystem {
 	public:
-		EntityComponentSystem() {};
+		EntityComponentSystem() : componentContainerPool{ std::make_shared<ContainerPool>() } {};
 		~EntityComponentSystem() {};
 
 
@@ -45,7 +44,7 @@ namespace engine {
 
 		template<typename T>
 		void registerComponent() {
-			componentContainerPool.emplace(getTypeName<T>(), std::make_shared<ComponentContainer<T>>());
+			componentContainerPool->emplace(getTypeName<T>(), std::make_shared<ComponentContainer<T>>());
 		}
 
 		template<typename... T>
@@ -77,7 +76,7 @@ namespace engine {
 
 		void update() {
 			for (auto& sys : systems) {
-				sys->update();  // --> update currently does nothing here 
+				sys->update(componentContainerPool);
 			}
 		}
 
@@ -89,7 +88,7 @@ namespace engine {
 		EntityOnwershipMap entityOwnershipMap{};
 
 		// --- Component Data --- //
-		ContainerPool componentContainerPool{};
+		std::shared_ptr<ContainerPool> componentContainerPool{};
 		std::unordered_map<ComponentId, Entity> componentToEntityMap{};
 		std::vector<ComponentId> freeComponentIds{};
 
@@ -148,15 +147,15 @@ namespace engine {
 		std::shared_ptr<ComponentContainer<T>> getComponentContainer() {
 			const char* containerType = getTypeName<T>();
 
-			if (auto search = componentContainerPool.find(containerType); search != componentContainerPool.end()) {
-				return std::static_pointer_cast<ComponentContainer<T>>(componentContainerPool[containerType]);
+			if (auto search = componentContainerPool->find(containerType); search != componentContainerPool->end()) {
+				return std::static_pointer_cast<ComponentContainer<T>>(componentContainerPool->at(containerType));
 			}
 			else {
 				throw std::runtime_error("SceneError: tried to find a container for an unregisterd component type...' ");
 			}
 		}
 		std::shared_ptr<ComponentContainer<std::any>> getComponentContainer(ContainerTypeName containerType) {
-			return std::static_pointer_cast<ComponentContainer<std::any>>(componentContainerPool[containerType]);
+			return std::static_pointer_cast<ComponentContainer<std::any>>(componentContainerPool->at(containerType));
 		}
 	};
 }

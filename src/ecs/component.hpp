@@ -1,14 +1,8 @@
 #pragma once 
 
 #include "utils.hpp"
-#include "systems/graphics_objects.hpp"
 
 #include <glm/glm.hpp>
-
-#include <string>
-#include <unordered_map>
-#include <typeinfo>
-
 
 namespace engine {
 
@@ -31,10 +25,13 @@ namespace engine {
 
 
 	struct Mesh : public Component<Mesh> {
-		std::vector<Vertex> vertices;
-		std::vector<int> indices;
+		const char* meshPath;
+		Mesh(const char* path) : meshPath{ path } {};
 	};
 
-
+	struct Texture : public Component<Texture> {
+		const char* texturePath;
+		Texture(const char* path) : texturePath{ path } {};
+	};
 
 };

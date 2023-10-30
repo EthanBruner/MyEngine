@@ -1,7 +1,6 @@
 #include "app.hpp"
-
-#include <iostream>
 #include "test_system.hpp"
+
 
 using namespace engine;
 
@@ -14,10 +13,7 @@ void App::run() {
 
     while (!glfwWindowShouldClose(window.getGLFWwindow())) {
         glfwPollEvents();
-        scene.update();
 
         vulkan.update();
     }
-
-    vkDeviceWaitIdle(vulkan.getDevice());
 }

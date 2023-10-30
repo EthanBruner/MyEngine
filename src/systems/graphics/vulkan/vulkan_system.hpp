@@ -55,9 +55,9 @@ namespace engine {
     };
 
 
-	class VulkanPipeline {
+	class VulkanSystem {
 	public:
-        VulkanPipeline(Window& window, const char* vertexPath, const char* fragmentPath) : window{ window } {
+        VulkanSystem(Window& window, const char* vertexPath, const char* fragmentPath) : window{ window } {
             createInstance();
             setupDebugMessenger();
             createSurface();
@@ -84,9 +84,7 @@ namespace engine {
             createCommandBuffers();
             createSyncObjects();
         };
-        ~VulkanPipeline();
-
-        VkDevice getDevice() { return device; };
+        ~VulkanSystem();
 
         // Draws the frame
         virtual void update();
