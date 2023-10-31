@@ -1,19 +1,17 @@
 #include "app.hpp"
-#include "test_system.hpp"
 
 
 using namespace engine;
 
 void App::run() {
 
-    scene.insertSystem<TestSystem>(10,20);
-    scene.registerComponentList<Transform, Empty>();
+    scene.insertSystem<VulkanSystem>(800, 600, "A window");
 
-    auto entity = scene.createEntity(Transform(), Empty());
+    
+    // Main Application Loop
+    auto mainLoop = [&]() {
+        scene.update();
 
-    while (!glfwWindowShouldClose(window.getGLFWwindow())) {
-        glfwPollEvents();
-
-        vulkan.update();
-    }
+    };
+    scene.getSystem<VulkanSystem>()->loop(mainLoop);
 }

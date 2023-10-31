@@ -2,6 +2,8 @@
 
 #include <glm/glm.hpp>
 
+#include <iostream>
+
 namespace engine {
 
 	// --- Entity --- //
@@ -16,20 +18,11 @@ namespace engine {
 
 
 	// --- Systems --- //
-	using SystemName = const char*;
 
 
 	// --- Misc. --- //
 	template <typename T>
-	const char* getTypeName() { return typeid(T).name(); };
-
-
-
-	// IDK about this
-	#define typelist(Name,...) \
-		enum Name##Req { __VA_ARGS__ }; \
-		namespace { const std::initializer_list<Name##Req> Name##List { __VA_ARGS__ }; };
-
-	#define SysRequirementsFor(Name) \
-		const std::initializer_list<Name##Req> systemRequirements = Name##List
+	const char* getTypeName() { return typeid(T).name(); }; // Gets typename of type
+	template <typename T>
+	const char* getTypeName(T arg) { return typeid(T).name(); }; // Gets typename of argument
 }

@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="src\app.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\systems\graphics\vulkan\vulkan_system.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\app.hpp" />
@@ -30,7 +31,8 @@
     <ClInclude Include="src\ecs\ecsUtils.hpp" />
     <ClInclude Include="src\ecs\entity_component_system.hpp" />
     <ClInclude Include="src\ecs\system.hpp" />
-    <ClInclude Include="src\systems\graphics\vulkan_system\vulkan_system.hpp" />
+    <ClInclude Include="src\systems\graphics\graphics_objects.hpp" />
+    <ClInclude Include="src\systems\graphics\vulkan\vulkan_system.hpp" />
     <ClInclude Include="src\test_system.hpp" />
   </ItemGroup>
   <ItemGroup>

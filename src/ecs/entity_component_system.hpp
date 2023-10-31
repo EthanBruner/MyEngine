@@ -7,6 +7,7 @@
 #include <any>
 #include <unordered_map>
 #include <vector>
+#include <set>
 #include<iostream>
 #include<execution>
 
@@ -74,11 +75,25 @@ namespace engine {
 		}
 
 
+		// NOTE: Just pray to god no two systems ever have the same size
+		template<typename T>
+		std::shared_ptr<T> getSystem() {
+			for (auto& sys : systems) {
+				if (sizeof(T) == sys->size()) {
+					return convertSystem<T>(sys);
+				}
+			};
+			throw std::runtime_error("EntityComponentSystemError: cannot get a system that does not exist");
+		}
+
+
 		void update() {
 			for (auto& sys : systems) {
 				sys->update(componentContainerPool);
 			}
 		}
+
+
 
 
 	private:
@@ -157,5 +172,12 @@ namespace engine {
 		std::shared_ptr<ComponentContainer<std::any>> getComponentContainer(ContainerTypeName containerType) {
 			return std::static_pointer_cast<ComponentContainer<std::any>>(componentContainerPool->at(containerType));
 		}
+
+
+		template<typename To, typename From>
+		std::shared_ptr<To> convertSystem(From sys) {
+			return std::static_pointer_cast<To>(sys);
+		}
+
 	};
 }
