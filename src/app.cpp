@@ -5,7 +5,7 @@ using namespace engine;
 
 void App::run() {
 
-    scene.insertSystem<VulkanSystem>(800, 600, "A window");
+    scene.insertSystem<VulkanSystem>(800, 600, "Application Window Name");
 
     
     // Main Application Loop

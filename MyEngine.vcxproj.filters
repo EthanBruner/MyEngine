@@ -50,10 +50,16 @@
     <ClInclude Include="src\ecs\utils.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\systems\graphics\vulkan\vulkan_system.hpp">
+    <ClInclude Include="src\systems\graphics\graphics_objects.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\systems\graphics\graphics_objects.hpp">
+    <ClInclude Include="src\systems\graphics\vulkan\utils.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\systems\graphics\vulkan\vertex_obj.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\systems\graphics\vulkan\vulkan_system.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
