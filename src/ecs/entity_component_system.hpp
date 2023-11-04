@@ -3,6 +3,7 @@
 #include "utils.hpp"
 #include "component.hpp"
 #include "component_container.hpp"
+#include "system_mediator.hpp"
 
 #include <any>
 #include <unordered_map>
@@ -15,14 +16,24 @@
 namespace engine {
 	using EntityOnwershipMap = std::unordered_map<Entity, std::unordered_map<ComponentId, ContainerTypeName>>;
 
+	enum SystemDefaults {
+		WithDefaultSystems,
+		NONE
+	};
+
 	class EntityComponentSystem {
 	public:
-		EntityComponentSystem() : componentContainerPool{ std::make_shared<ContainerPool>() } {};
+		EntityComponentSystem(SystemDefaults system_default_choice) : componentContainerPool{ std::make_shared<ContainerPool>() } {
+			if (system_default_choice == WithDefaultSystems) {
+				insertSystem<ResourceManager>();
+				//insertSystem<VulkanSystem>(800, 600, "Default Vulkan Window");
+			}
+		};
 		~EntityComponentSystem() {};
 
 
 		template<typename... T>
-		Entity& createEntity(Component<T>&&... comps) {
+		Entity& createEntity(T&&... comps) {
 			Entity newEntity{};
 			// Create a id to represent the entity
 			if (!freeEntities.empty()) {
@@ -68,6 +79,8 @@ namespace engine {
 		}
 
 
+		// ---  System Functions ---- //
+
 		template <typename T, typename... SysArgs>
 		void insertSystem(SysArgs... args) {
 			auto system = std::static_pointer_cast<System>(std::make_shared<T>(std::forward<SysArgs>(args)...));
@@ -75,26 +88,31 @@ namespace engine {
 		}
 
 
-		// NOTE: Just pray to god no two systems ever have the same size
+		//------------------------------------------------------------------//
+		// WARNING: Just pray to god no two systems ever have the same size //
+		//------------------------------------------------------------------//
 		template<typename T>
 		std::shared_ptr<T> getSystem() {
 			for (auto& sys : systems) {
 				if (sizeof(T) == sys->size()) {
-					return convertSystem<T>(sys);
+					return std::static_pointer_cast<T>(sys);
 				}
 			};
 			throw std::runtime_error("EntityComponentSystemError: cannot get a system that does not exist");
 		}
 
 
-		void update() {
+		void init() {
 			for (auto& sys : systems) {
-				sys->update(componentContainerPool);
+				sys->init(componentContainerPool, systems);
 			}
 		}
 
-
-
+		void update() {
+			for (auto& sys : systems) {
+				sys->update();
+			}
+		}
 
 	private:
 		// --- Entity Data --- //
@@ -109,6 +127,7 @@ namespace engine {
 
 		// --- System Data --- //
 		std::vector<std::shared_ptr<System>> systems{};
+		std::shared_ptr<SystemMediator> systemMediator;
 
 
 
@@ -118,7 +137,7 @@ namespace engine {
 
 
 		template<typename T>
-		void bindComponent(Entity entity, Component<T> component) {
+		void bindComponent(Entity entity, T component) {
 			assertEntityExists(entity);
 			auto componentType = getTypeName<T>();
 
@@ -140,7 +159,7 @@ namespace engine {
 		}
 
 		template<typename T>
-		bool hasComonentType(Entity& entity, Component<T> componentType) {
+		bool hasComonentType(Entity& entity, T componentType) {
 			assertEntityExists(entity);
 
 			if (auto entityBindings = entityOwnershipMap[entity]; entityBindings.find(getTypeName<T>()) == entityBindings.end()) {
@@ -172,12 +191,5 @@ namespace engine {
 		std::shared_ptr<ComponentContainer<std::any>> getComponentContainer(ContainerTypeName containerType) {
 			return std::static_pointer_cast<ComponentContainer<std::any>>(componentContainerPool->at(containerType));
 		}
-
-
-		template<typename To, typename From>
-		std::shared_ptr<To> convertSystem(From sys) {
-			return std::static_pointer_cast<To>(sys);
-		}
-
 	};
 }

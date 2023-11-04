@@ -21,10 +21,12 @@
   <ItemGroup>
     <ClCompile Include="src\app.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\systems\graphics\resource_manager\resource_manager.cpp" />
     <ClCompile Include="src\systems\graphics\vulkan\vulkan_system.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\app.hpp" />
+    <ClInclude Include="src\ecs\system_mediator.hpp" />
     <ClInclude Include="src\ecs\utils.hpp" />
     <ClInclude Include="src\ecs\component.hpp" />
     <ClInclude Include="src\ecs\component_container.hpp" />
@@ -32,9 +34,11 @@
     <ClInclude Include="src\ecs\entity_component_system.hpp" />
     <ClInclude Include="src\ecs\system.hpp" />
     <ClInclude Include="src\systems\graphics\graphics_objects.hpp" />
+    <ClInclude Include="src\systems\graphics\resource_manager\resource_manager.hpp" />
     <ClInclude Include="src\systems\graphics\vulkan\utils.hpp" />
     <ClInclude Include="src\systems\graphics\vulkan\vertex_obj.hpp" />
     <ClInclude Include="src\systems\graphics\vulkan\vulkan_system.hpp" />
+    <ClInclude Include="src\systems\systems_utils.hpp" />
     <ClInclude Include="src\test_system.hpp" />
   </ItemGroup>
   <ItemGroup>

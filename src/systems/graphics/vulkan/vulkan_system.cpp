@@ -480,8 +480,8 @@ void VulkanSystem::createGraphicsPipeline() {
     VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
     vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 
-    auto bindingDescription = VertexObject::getBindingDescription();
-    auto attributeDescriptions = VertexObject::getAttributeDescriptions();
+    auto bindingDescription = Vertex::getBindingDescription();
+    auto attributeDescriptions = Vertex::getAttributeDescriptions();
 
     vertexInputInfo.vertexBindingDescriptionCount = 1;
     vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
@@ -1264,7 +1264,10 @@ void VulkanSystem::updateUniformBuffer(uint32_t currentImage) {
 }
 
 
-void VulkanSystem::update(std::shared_ptr<ContainerPool> containerpool) {
+void VulkanSystem::update() {
+    auto resourceManager = getSystem<ResourceManager>();
+    auto& meshes = resourceManager->getLoadedMeshes();
+
     vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
     uint32_t imageIndex;
@@ -1510,23 +1513,5 @@ bool VulkanSystem::checkValidationLayerSupport() {
     }
 
     return true;
-}
-
-std::vector<char> VulkanSystem::readFile(const std::string& filename) {
-    std::ifstream file(filename, std::ios::ate | std::ios::binary);
-
-    if (!file.is_open()) {
-        throw std::runtime_error("failed to open file!");
-    }
-
-    size_t fileSize = (size_t)file.tellg();
-    std::vector<char> buffer(fileSize);
-
-    file.seekg(0);
-    file.read(buffer.data(), fileSize);
-
-    file.close();
-
-    return buffer;
 }
 

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "../../../ecs/system.hpp"
+#include "../../systems_utils.hpp"
+#include "../resource_manager/resource_manager.hpp"
 #include "../graphics_objects.hpp"
 #include "utils.hpp"
 
@@ -17,7 +19,7 @@ namespace engine {
 		VulkanSystem(int w, int h, std::string name);
 		~VulkanSystem();
 
-		virtual void update(std::shared_ptr<ContainerPool> containerpool);
+		virtual void update();
 		virtual std::size_t size() { return sizeof(VulkanSystem); };
 
 		template<typename F>
@@ -26,6 +28,7 @@ namespace engine {
 				glfwPollEvents();
 				func();
 			}
+            vkDeviceWaitIdle(device);
 		}
 
 
@@ -90,8 +93,8 @@ namespace engine {
         VkSampler textureSampler;
 
         // Buffers
-        const int BUFFER_ALLOC = pow(4, 5);
-        std::vector<VertexObject> vertices;
+        const std::size_t BUFFER_ALLOC = pow(4, 5);
+        std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;
         VkBuffer vertexBuffer;
         VkDeviceMemory vertexBufferMemory;
@@ -142,10 +145,8 @@ namespace engine {
         void createTextureImageView();
         void createTextureSampler();
 
-
         void createDescriptorPool();
         void createDescriptorSets();
-
 
         void createCommandBuffers();
         void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
@@ -184,6 +185,5 @@ namespace engine {
         QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
         std::vector<const char*> getRequiredExtensions();
         bool checkValidationLayerSupport();
-        static std::vector<char> readFile(const std::string& filename);
 	};
 }

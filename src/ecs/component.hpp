@@ -6,13 +6,10 @@
 
 namespace engine {
 
-	template<typename T>
-	struct Component {};
 
-	struct Empty : public Component<Empty> {};
+	struct Empty {};
 
-
-	struct Transform : public Component<Transform> {
+	struct Transform {
 		glm::vec3 position;
 		glm::vec3 rotation;
 		float scale;
@@ -23,15 +20,15 @@ namespace engine {
 		{};
 	};
 
-
-	struct Mesh : public Component<Mesh> {
-		const char* meshPath;
-		Mesh(const char* path) : meshPath{ path } {};
+	struct Mesh {
+		const char* path;
+		// Insert < pointer to mesh >;
+		Mesh(const char* path) : path{ path } {};
 	};
 
-	struct Texture : public Component<Texture> {
-		const char* texturePath;
-		Texture(const char* path) : texturePath{ path } {};
+	struct Texture {
+		const char* path;
+		// Insert < pointer to texture >;
 	};
 
 };

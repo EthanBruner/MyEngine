@@ -1,6 +1,8 @@
 #pragma once 
 
 #include <glm/glm.hpp>
+#include <vector>
+#include <memory>
 
 #include <iostream>
 
@@ -18,6 +20,8 @@ namespace engine {
 
 
 	// --- Systems --- //
+	
+
 
 
 	// --- Misc. --- //

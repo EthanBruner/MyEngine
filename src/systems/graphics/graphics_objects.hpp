@@ -9,47 +9,46 @@
 #include <glm/gtx/hash.hpp>
 
 namespace engine {
-    struct VertexObject {
+    struct Vertex {
         glm::vec3 pos;
-        glm::vec3 color;
+        glm::vec3 normal;
         glm::vec2 texCoord;
+        glm::vec3 color;
 
+        // Vulkan Functions
         static VkVertexInputBindingDescription getBindingDescription() {
             VkVertexInputBindingDescription bindingDescription{};
             bindingDescription.binding = 0;
-            bindingDescription.stride = sizeof(VertexObject);
+            bindingDescription.stride = sizeof(Vertex);
             bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
             return bindingDescription;
         }
 
-        static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions() {
-            std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions{};
-
-            attributeDescriptions[0].binding = 0;
-            attributeDescriptions[0].location = 0;
-            attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
-            attributeDescriptions[0].offset = offsetof(VertexObject, pos);
-
-            attributeDescriptions[1].binding = 0;
-            attributeDescriptions[1].location = 1;
-            attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-            attributeDescriptions[1].offset = offsetof(VertexObject, color);
-
-            attributeDescriptions[2].binding = 0;
-            attributeDescriptions[2].location = 2;
-            attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
-            attributeDescriptions[2].offset = offsetof(VertexObject, texCoord);
+        static std::array<VkVertexInputAttributeDescription, 4> getAttributeDescriptions() {
+            std::array<VkVertexInputAttributeDescription, 4> attributeDescriptions
+            {{
+                { 0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, pos) },
+                { 1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, normal) },
+                { 2, 0, VK_FORMAT_R32G32_SFLOAT, offsetof(Vertex, texCoord) },
+                { 3, 0, VK_FORMAT_R32G32B32_SFLOAT , offsetof(Vertex, color) }
+            }};
 
             return attributeDescriptions;
         }
 
-        bool operator==(const VertexObject& other) const {
+        bool operator==(const Vertex& other) const {
             return pos == other.pos && color == other.color && texCoord == other.texCoord;
         }
     };
 
 
+    struct MeshObj {
+        std::vector<Vertex> vertices;
+        std::vector<int> indices;
+
+    };
+    
 
     struct UniformBufferObject {
         glm::mat4 model;
@@ -62,8 +61,8 @@ namespace engine {
 
 
     namespace std {
-        template<> struct hash<engine::VertexObject> {
-            size_t operator()(engine::VertexObject const& vertex) const {
+        template<> struct hash<engine::Vertex> {
+            size_t operator()(engine::Vertex const& vertex) const {
                 return ((hash<glm::vec3>()(vertex.pos) ^ (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^ (hash<glm::vec2>()(vertex.texCoord) << 1);
             }
         };

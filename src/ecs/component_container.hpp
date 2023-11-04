@@ -14,11 +14,16 @@ namespace engine {
 	using ContainerPool = std::unordered_map<ContainerTypeName, std::shared_ptr<BaseComponentContainer>>; // NOTE:: Make class ?
 
 	template<typename T>
+	using ComponentMap = std::unordered_map<ComponentId, T>;
+
+
+
+	template<typename T>
 	class ComponentContainer : public BaseComponentContainer {
 	public:
 		ComponentContainer() {};
 
-		void add(ComponentId id, Component<T> component) {
+		void add(ComponentId id, T component) {
 			components.emplace(id, component);
 		};
 
@@ -26,18 +31,12 @@ namespace engine {
 			components.erase(id);
 		};
 
+		ComponentMap<T>& getComponents() {
+			return components;
+		}
+
 	private:
-		std::unordered_map<ComponentId, Component<T>> components;
+		ComponentMap<T> components;
 		
 	};
-
-
-
-	class ComponentContainerCollection {
-	public:
-		std::unordered_map<ContainerTypeName, std::shared_ptr<BaseComponentContainer>> collection;
-
-
-	private:
-	};
-};
+}

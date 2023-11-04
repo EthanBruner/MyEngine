@@ -24,6 +24,9 @@
     <ClCompile Include="src\systems\graphics\vulkan\vulkan_system.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\systems\graphics\resource_manager\resource_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\app.hpp">
@@ -60,6 +63,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\systems\graphics\vulkan\vulkan_system.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\systems\graphics\resource_manager\resource_manager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\systems\systems_utils.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ecs\system_mediator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
