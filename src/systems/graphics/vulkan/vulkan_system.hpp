@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../ecs/system.hpp"
+#include "../../../ecs/entity_component_system.hpp"
 #include "../../systems_utils.hpp"
 #include "../resource_manager/resource_manager.hpp"
 #include "../graphics_objects.hpp"
@@ -19,6 +19,7 @@ namespace engine {
 		VulkanSystem(int w, int h, std::string name);
 		~VulkanSystem();
 
+        virtual void init();
 		virtual void update();
 		virtual std::size_t size() { return sizeof(VulkanSystem); };
 
@@ -93,7 +94,6 @@ namespace engine {
         VkSampler textureSampler;
 
         // Buffers
-        const std::size_t BUFFER_ALLOC = pow(4, 5);
         std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;
         VkBuffer vertexBuffer;
