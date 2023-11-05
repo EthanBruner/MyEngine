@@ -16,12 +16,10 @@ namespace engine {
 	class VulkanSystem: public System {
 	public:
 
-		VulkanSystem(int w, int h, std::string name);
+		VulkanSystem(std::shared_ptr<EntityComponentSystem> parentEcs, int w, int h, std::string name);
 		~VulkanSystem();
 
-        virtual void init();
 		virtual void update();
-		virtual std::size_t size() { return sizeof(VulkanSystem); };
 
 		template<typename F>
 		void loop(const F& func) {

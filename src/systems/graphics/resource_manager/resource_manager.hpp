@@ -12,9 +12,7 @@ namespace engine {
 
 	class ResourceManager: public System {
 	public:
-		virtual void init();
-		virtual std::size_t size() { return sizeof(ResourceManager); };
-
+		ResourceManager(std::shared_ptr<EntityComponentSystem> parentEcs);
 
 		std::tuple<std::unordered_map<mesh_path, MeshObj>&,  std::vector<Vertex>&, std::vector<uint32_t>&> getLoadedMeshData() {
 			return { meshes, vertices, indices };

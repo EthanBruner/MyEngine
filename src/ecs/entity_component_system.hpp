@@ -1,7 +1,7 @@
 #pragma once 
 
 #include "utils.hpp"
-#include "component.hpp"
+#include "components.hpp"
 #include "component_container.hpp"
 
 #include <any>
@@ -15,18 +15,14 @@
 namespace engine {
 	using EntityOnwershipMap = std::unordered_map<Entity, std::unordered_map<ComponentId, ContainerTypeName>>;
 
-	// Temporarily define here so systems can store info pointing to ecs
-	class EntityComponentSystem;
+	
+	class EntityComponentSystem; // Temporarily define here so System can store pointer to ecs
 
 
 	class System {
 	public:
-		virtual void init() {};
+		System(std::shared_ptr<EntityComponentSystem> parentEcs) : ecs{ parentEcs } {};
 		virtual void update() {};
-		virtual std::size_t size() = 0;
-
-		void bindEcs(std::shared_ptr<EntityComponentSystem> parentEcs) { ecs = parentEcs; };
-
 	protected:
 		// NOTE: ecs fuctions cannot be called inside System because they dont exist yet
 		std::shared_ptr<engine::EntityComponentSystem> ecs;
@@ -99,38 +95,30 @@ namespace engine {
 
 		// ---  System Functions ---- //
 
+		// NOTE: Expects arguments required to construct system excluding ecs pointer (should be first parameter of subsystem constructor)
 		template <typename T, typename... SysArgs>
 		void insertSystem(SysArgs... args) {
-			// Build System
-			std::shared_ptr<System> system = std::static_pointer_cast<System>(std::make_shared<T>(std::forward<SysArgs>(args)...));
-			system->bindEcs(std::make_shared<EntityComponentSystem>(*this));
+			auto parentEcs = std::make_shared<EntityComponentSystem>(*this);
+			std::shared_ptr<System> system = std::static_pointer_cast<System>(std::make_shared<T>(parentEcs, std::forward<SysArgs>(args)...));
 
-			systems.emplace_back(system);
+			systems.emplace(getTypeName<T>(), system);
 		}
 
 
-		//------------------------------------------------------------------//
-		// WARNING: Just pray to god no two systems ever have the same size //
-		//------------------------------------------------------------------//
 		template<typename T>
 		std::shared_ptr<T> getSystem() {
-			for (auto& sys : systems) {
-				if (sizeof(T) == sys->size()) {
-					return std::static_pointer_cast<T>(sys);
-				}
-			};
-			throw std::runtime_error("EntityComponentSystemError: cannot get a system that does not exist");
-		}
-
-
-		void init() {
-			for (auto& sys : systems) {
-				sys->init();
+			auto sysName = getTypeName<T>();
+			if (systems.find(sysName) == systems.end()) {
+				throw std::runtime_error("EntityComponentSystemError: cannot get a system that does not exist...");
+			}
+			else {
+				return std::static_pointer_cast<T>(systems.at(sysName));
 			}
 		}
 
+
 		void update() {
-			for (auto& sys : systems) {
+			for (auto&[key, sys] : systems) {
 				sys->update();
 			}
 		}
@@ -147,7 +135,7 @@ namespace engine {
 		std::vector<ComponentId> freeComponentIds{};
 
 		// --- System Data --- //
-		std::vector<std::shared_ptr<System>> systems{};
+		std::unordered_map<SystemTypeName, std::shared_ptr<System>> systems{};
 
 
 

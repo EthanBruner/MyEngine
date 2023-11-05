@@ -7,12 +7,12 @@ using namespace engine;
 #include <iostream>
 
 
-void ResourceManager::init() {
-	auto& compoents = ecs->retrieveComponents<Mesh>();
-	for (auto&[id, mesh] : compoents) {
-		loadObj(mesh.path);
-	}
-};
+ResourceManager::ResourceManager(std::shared_ptr<EntityComponentSystem> parentEcs): System(parentEcs) {
+    auto& compoents = ecs->retrieveComponents<Mesh>();
+    for (auto& [id, mesh] : compoents) {
+        loadObj(mesh.path);
+    }
+}
 
 
 void ResourceManager::loadObj(const char* model_path) {

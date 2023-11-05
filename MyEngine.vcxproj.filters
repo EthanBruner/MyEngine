@@ -32,7 +32,7 @@
     <ClInclude Include="src\app.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ecs\component.hpp">
+    <ClInclude Include="src\ecs\components.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ecs\component_container.hpp">

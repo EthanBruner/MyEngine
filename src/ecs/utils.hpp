@@ -10,18 +10,14 @@ namespace engine {
 
 	// --- Entity --- //
 	using Entity = std::size_t;
-	using Index = std::size_t;
-	static constexpr auto InvalidIndex = std::numeric_limits<Index>::max();
 
 	// --- Components --- //
 	using ContainerTypeName = const char*;
 	using ComponentTypeName = const char*;
 	using ComponentId = std::size_t;
 
-
 	// --- Systems --- //
-	
-
+	using SystemTypeName = const char*;
 
 
 	// --- Misc. --- //

@@ -21,7 +21,11 @@ using namespace engine;
 //--------------------------//
 //			STARTUP			//
 //--------------------------//
-VulkanSystem::VulkanSystem(int w, int h, std::string name) : width{ w }, height{ h }, windowName{ name } {
+VulkanSystem::VulkanSystem(std::shared_ptr<EntityComponentSystem> parentEcs, int w, int h, std::string name) : System(parentEcs), width{ w }, height{ h }, windowName{ name } {
+    auto [meshes, verts, inds] = ecs->getSystem<ResourceManager>()->getLoadedMeshData();
+    vertices = verts;
+    indices = inds;
+
     initWindow();
     createInstance();
     setupDebugMessenger();
@@ -46,7 +50,10 @@ VulkanSystem::VulkanSystem(int w, int h, std::string name) : width{ w }, height{
     createTextureImageView();
     createTextureSampler();
 
+    createVertexBuffer();
+    createIndexBuffer();
     createUniformBuffers();
+
     createDescriptorPool();
     createDescriptorSets();
     createCommandBuffers();
@@ -104,16 +111,6 @@ VulkanSystem::~VulkanSystem() {
     glfwDestroyWindow(window);
 
     glfwTerminate();
-}
-
-
-void VulkanSystem::init() {
-    auto[meshes, verts, inds] = ecs->getSystem<ResourceManager>()->getLoadedMeshData();
-    vertices = verts;
-    indices = inds;
-
-    createVertexBuffer();
-    createIndexBuffer();
 }
 
 
@@ -807,6 +804,7 @@ VkSampleCountFlagBits VulkanSystem::getMaxUsableSampleCount() {
 
     return VK_SAMPLE_COUNT_1_BIT;
 }
+
 
 void VulkanSystem::createTextureImage() {
     int texWidth, texHeight, texChannels;
