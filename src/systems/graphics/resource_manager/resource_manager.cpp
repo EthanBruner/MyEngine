@@ -7,11 +7,8 @@ using namespace engine;
 #include <iostream>
 
 
-void ResourceManager::init(std::shared_ptr<ContainerPool> container_pool , std::vector<std::shared_ptr<System>> system_pool) {
-    containerPool = container_pool;
-    setSystemPool(system_pool);
-
-	auto& compoents = retrieve<Mesh>(containerPool);
+void ResourceManager::init() {
+	auto& compoents = ecs->retrieveComponents<Mesh>();
 	for (auto&[id, mesh] : compoents) {
 		loadObj(mesh.path);
 	}
@@ -20,7 +17,7 @@ void ResourceManager::init(std::shared_ptr<ContainerPool> container_pool , std::
 
 void ResourceManager::loadObj(const char* model_path) {
 
-    // If the model has already been loaded return early
+     //If the model has already been loaded return early
     if (meshes.find(model_path) != meshes.end()) {
         return;
     }
@@ -34,7 +31,10 @@ void ResourceManager::loadObj(const char* model_path) {
         throw std::runtime_error(warn + err);
     }
 
-    MeshObj newMesh {};
+    MeshObj newMesh{};
+    newMesh.vertexStart = vertices.size() + 1;
+    newMesh.indexStart = indices.size() + 1;
+
     std::unordered_map<Vertex, uint32_t> uniqueVertices{};
 
     for (const auto& shape : shapes) {
@@ -67,13 +67,15 @@ void ResourceManager::loadObj(const char* model_path) {
 
             // Create Indices 
             if (uniqueVertices.count(vertex) == 0) {
-                uniqueVertices[vertex] = static_cast<uint32_t>(newMesh.vertices.size());
-                newMesh.vertices.push_back(vertex);
+                uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
+                vertices.emplace_back(vertex);
             }
 
-            newMesh.indices.push_back(uniqueVertices[vertex]);
+            indices.emplace_back(uniqueVertices[vertex]);
         }
     }
 
+    newMesh.vertexEnd = vertices.size();
+    newMesh.indexEnd = indices.size();
     meshes.emplace(model_path, newMesh);
 }

@@ -3,7 +3,6 @@
 #include "utils.hpp"
 #include "component.hpp"
 #include "component_container.hpp"
-#include "system_mediator.hpp"
 
 #include <any>
 #include <unordered_map>
@@ -16,22 +15,31 @@
 namespace engine {
 	using EntityOnwershipMap = std::unordered_map<Entity, std::unordered_map<ComponentId, ContainerTypeName>>;
 
-	enum SystemDefaults {
-		WithDefaultSystems,
-		NONE
+	// Temporarily define here so systems can store info pointing to ecs
+	class EntityComponentSystem;
+
+
+	class System {
+	public:
+		virtual void init() {};
+		virtual void update() {};
+		virtual std::size_t size() = 0;
+
+		void bindEcs(std::shared_ptr<EntityComponentSystem> parentEcs) { ecs = parentEcs; };
+
+	protected:
+		// NOTE: ecs fuctions cannot be called inside System because they dont exist yet
+		std::shared_ptr<engine::EntityComponentSystem> ecs;
 	};
+
+
 
 	class EntityComponentSystem {
 	public:
-		EntityComponentSystem(SystemDefaults system_default_choice) : componentContainerPool{ std::make_shared<ContainerPool>() } {
-			if (system_default_choice == WithDefaultSystems) {
-				insertSystem<ResourceManager>();
-				//insertSystem<VulkanSystem>(800, 600, "Default Vulkan Window");
-			}
-		};
+		EntityComponentSystem() : componentContainerPool{ std::make_shared<ContainerPool>() } {};
 		~EntityComponentSystem() {};
 
-
+		// --- Entity Functions --- //
 		template<typename... T>
 		Entity& createEntity(T&&... comps) {
 			Entity newEntity{};
@@ -54,17 +62,6 @@ namespace engine {
 		}
 
 
-		template<typename T>
-		void registerComponent() {
-			componentContainerPool->emplace(getTypeName<T>(), std::make_shared<ComponentContainer<T>>());
-		}
-
-		template<typename... T>
-		void registerComponentList() {
-			([&] { registerComponent<T>(); }(), ...);
-		}
-
-
 		void removeEntity(Entity entity) {
 			assertEntityExists(entity);
 
@@ -79,11 +76,35 @@ namespace engine {
 		}
 
 
+
+
+		// --- Component Functions --- //
+
+		template<typename T>
+		void registerComponent() {
+			componentContainerPool->emplace(getTypeName<T>(), std::make_shared<ComponentContainer<T>>());
+		}
+		template<typename... T>
+		void registerComponentList() {
+			([&] { registerComponent<T>(); }(), ...);
+		}
+
+		template<typename T>
+		ComponentMap<T>& retrieveComponents() {
+			auto container = getComponentContainer<T>();
+			return container->getComponents();
+		}
+
+
+
 		// ---  System Functions ---- //
 
 		template <typename T, typename... SysArgs>
 		void insertSystem(SysArgs... args) {
-			auto system = std::static_pointer_cast<System>(std::make_shared<T>(std::forward<SysArgs>(args)...));
+			// Build System
+			std::shared_ptr<System> system = std::static_pointer_cast<System>(std::make_shared<T>(std::forward<SysArgs>(args)...));
+			system->bindEcs(std::make_shared<EntityComponentSystem>(*this));
+
 			systems.emplace_back(system);
 		}
 
@@ -104,7 +125,7 @@ namespace engine {
 
 		void init() {
 			for (auto& sys : systems) {
-				sys->init(componentContainerPool, systems);
+				sys->init();
 			}
 		}
 
@@ -127,7 +148,6 @@ namespace engine {
 
 		// --- System Data --- //
 		std::vector<std::shared_ptr<System>> systems{};
-		std::shared_ptr<SystemMediator> systemMediator;
 
 
 

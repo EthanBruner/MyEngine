@@ -44,9 +44,10 @@ namespace engine {
 
 
     struct MeshObj {
-        std::vector<Vertex> vertices;
-        std::vector<int> indices;
-
+        uint32_t vertexStart;
+        uint32_t vertexEnd;
+        uint32_t indexStart;
+        uint32_t indexEnd;
     };
     
 
@@ -60,10 +61,10 @@ namespace engine {
 
 
 
-    namespace std {
-        template<> struct hash<engine::Vertex> {
-            size_t operator()(engine::Vertex const& vertex) const {
-                return ((hash<glm::vec3>()(vertex.pos) ^ (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^ (hash<glm::vec2>()(vertex.texCoord) << 1);
-            }
-        };
-    }
+namespace std {
+    template<> struct hash<engine::Vertex> {
+        size_t operator()(engine::Vertex const& vertex) const {
+            return (((hash<glm::vec3>()(vertex.pos) ^ (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^ (hash<glm::vec2>()(vertex.texCoord) << 1) ^ (hash<glm::vec3>()(vertex.normal) << 1));
+        }
+    };
+}

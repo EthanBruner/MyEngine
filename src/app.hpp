@@ -10,6 +10,6 @@ namespace engine {
 	public:
 		void run();
 	private:
-		EntityComponentSystem scene{ WithDefaultSystems };
+		EntityComponentSystem scene{};
 	};
 }
