@@ -1,21 +1,20 @@
 #include "app.hpp"
 using namespace engine;
 
+#include <GLFW/glfw3.h>
 
 
 void App::run() {
 
-    scene.registerComponent<Mesh>();
-    scene.registerComponent<Transform>();
+    scene.registerComponents<Mesh, Texture, Transform>();
 
-    scene.createEntity(Mesh("assests/viking_room.obj"), Transform());
+    scene.createEntity(Mesh("assests/viking_room.obj"), Texture("assests/viking_room.png"), Transform());
 
     scene.insertSystem<ResourceManager>();
-    scene.insertSystem<VulkanSystem>(800, 600, "Default Vulkan Window");
-
+    scene.insertSystem<Vulkan>(800, 600, "Default Window");
 
     auto mainLoop = [&]() {
         scene.update();
     };
-    scene.getSystem<VulkanSystem>()->loop(mainLoop);
+    scene.getSystem<Vulkan>()->loop(mainLoop);
 }

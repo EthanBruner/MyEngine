@@ -3,32 +3,15 @@
 #include "utils.hpp"
 #include "components.hpp"
 #include "component_container.hpp"
+#include "system.hpp"
 
 #include <any>
 #include <unordered_map>
 #include <vector>
-#include <set>
-#include<iostream>
-#include<execution>
 
 
 namespace engine {
 	using EntityOnwershipMap = std::unordered_map<Entity, std::unordered_map<ComponentId, ContainerTypeName>>;
-
-	
-	class EntityComponentSystem; // Temporarily define here so System can store pointer to ecs
-
-
-	class System {
-	public:
-		System(std::shared_ptr<EntityComponentSystem> parentEcs) : ecs{ parentEcs } {};
-		virtual void update() {};
-	protected:
-		// NOTE: ecs fuctions cannot be called inside System because they dont exist yet
-		std::shared_ptr<engine::EntityComponentSystem> ecs;
-	};
-
-
 
 	class EntityComponentSystem {
 	public:
@@ -72,17 +55,12 @@ namespace engine {
 		}
 
 
-
-
 		// --- Component Functions --- //
-
-		template<typename T>
-		void registerComponent() {
-			componentContainerPool->emplace(getTypeName<T>(), std::make_shared<ComponentContainer<T>>());
-		}
 		template<typename... T>
-		void registerComponentList() {
-			([&] { registerComponent<T>(); }(), ...);
+		void registerComponents() {
+			([&] { 
+				componentContainerPool->emplace(getTypeName<T>(), std::make_shared<ComponentContainer<T>>());
+			}(), ...);
 		}
 
 		template<typename T>
@@ -124,21 +102,22 @@ namespace engine {
 		}
 
 	private:
-		// --- Entity Data --- //
+		// --- Entity Members --- //
 		std::vector<Entity> entities{};
 		std::vector<Entity> freeEntities{};
 		EntityOnwershipMap entityOwnershipMap{};
 
-		// --- Component Data --- //
+		// --- Component Members --- //
 		std::shared_ptr<ContainerPool> componentContainerPool{};
 		std::unordered_map<ComponentId, Entity> componentToEntityMap{};
 		std::vector<ComponentId> freeComponentIds{};
 
-		// --- System Data --- //
+		// --- System Members --- //
 		std::unordered_map<SystemTypeName, std::shared_ptr<System>> systems{};
 
 
 
+		// --- Private Functions --- // 
 		void assertEntityExists(Entity entity) {
 			assert(std::find(entities.begin(), entities.end(), entity) != entities.end() && "EntityComponentSystemError: entity does not exist ");
 		}

@@ -29,6 +29,7 @@ namespace engine {
 	struct Texture {
 		const char* path;
 		// Insert < pointer to texture >;
+		Texture(const char* path) : path{ path } {};
 	};
 
 };

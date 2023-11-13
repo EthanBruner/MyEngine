@@ -20,9 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\app.cpp" />
+    <ClCompile Include="src\ecs\system.hpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\systems\graphics\resource_manager\resource_manager.cpp" />
-    <ClCompile Include="src\systems\graphics\vulkan\vulkan_system.cpp" />
+    <ClCompile Include="src\systems\resource_manager\resource_manager.cpp" />
+    <ClCompile Include="src\systems\vulkan\vulkan_system.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\app.hpp" />
@@ -31,13 +32,11 @@
     <ClInclude Include="src\ecs\component_container.hpp" />
     <ClInclude Include="src\ecs\ecsUtils.hpp" />
     <ClInclude Include="src\ecs\entity_component_system.hpp" />
-    <ClInclude Include="src\systems\graphics\graphics_objects.hpp" />
-    <ClInclude Include="src\systems\graphics\resource_manager\resource_manager.hpp" />
-    <ClInclude Include="src\systems\graphics\vulkan\utils.hpp" />
-    <ClInclude Include="src\systems\graphics\vulkan\vertex_obj.hpp" />
-    <ClInclude Include="src\systems\graphics\vulkan\vulkan_system.hpp" />
+    <ClInclude Include="src\systems\vulkan\graphics_objects.hpp" />
+    <ClInclude Include="src\systems\resource_manager\resource_manager.hpp" />
     <ClInclude Include="src\systems\systems_utils.hpp" />
-    <ClInclude Include="src\test_system.hpp" />
+    <ClInclude Include="src\systems\vulkan\utils.hpp" />
+    <ClInclude Include="src\systems\vulkan\vulkan_system.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\frag.spv" />
@@ -129,7 +128,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);GLEW_STATIC</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\Ethan\Documents\C++\Libraries\GLFW\include;C:\Users\Ethan\Documents\C++\Libraries\Vulkan\Include;C:\Users\Ethan\Documents\C++\Libraries\glm;C:\Users\Ethan\Documents\C++\Libraries\tinyobjloader;C:\Users\Ethan\Documents\C++\Libraries\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -138,7 +137,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Users\Ethan\Documents\C++\Libraries\Vulkan\Lib;C:\Users\Ethan\Documents\C++\Libraries\GLFW\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>vulkan-1.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>vulkan-1.lib;opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
       <Command>C:\VulkanSDK\1.3.261.1\Bin\glslc.exe shaders\simple.vert -o shaders\vert.spv
@@ -154,7 +153,7 @@ C:\VulkanSDK\1.3.261.1\Bin\glslc.exe shaders\simple.frag -o shaders\frag.spv</Co
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);GLEW_STATIC</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\Ethan\Documents\C++\Libraries\GLFW\include;C:\Users\Ethan\Documents\C++\Libraries\Vulkan\Include;C:\Users\Ethan\Documents\C++\Libraries\glm;C:\Users\Ethan\Documents\C++\Libraries\tinyobjloader;C:\Users\Ethan\Documents\C++\Libraries\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -165,7 +164,7 @@ C:\VulkanSDK\1.3.261.1\Bin\glslc.exe shaders\simple.frag -o shaders\frag.spv</Co
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Users\Ethan\Documents\C++\Libraries\Vulkan\Lib;C:\Users\Ethan\Documents\C++\Libraries\GLFW\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>vulkan-1.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>vulkan-1.lib;opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
       <Command>C:\VulkanSDK\1.3.261.1\Bin\glslc.exe shaders\simple.vert -o shaders\vert.spv

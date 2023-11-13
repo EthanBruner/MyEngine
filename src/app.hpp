@@ -1,8 +1,8 @@
 #pragma once
 
-#include "systems/graphics/vulkan/vulkan_system.hpp"
-#include "systems/graphics/resource_manager/resource_manager.hpp"
 #include "ecs/entity_component_system.hpp"
+#include "systems/vulkan/vulkan_system.hpp"
+#include "systems/resource_manager/resource_manager.hpp"
 
 namespace engine {
 

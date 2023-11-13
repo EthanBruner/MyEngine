@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../../../ecs/entity_component_system.hpp"
-#include "../../systems_utils.hpp"
+#include "../../ecs/entity_component_system.hpp"
+#include "../systems_utils.hpp"
 #include "../resource_manager/resource_manager.hpp"
-#include "../graphics_objects.hpp"
+#include "graphics_objects.hpp"
 #include "utils.hpp"
 
 #define GLFW_INCLUDE_VULKAN
@@ -13,11 +13,11 @@
 
 namespace engine {
 
-	class VulkanSystem: public System {
+	class Vulkan: public System {
 	public:
 
-		VulkanSystem(std::shared_ptr<EntityComponentSystem> parentEcs, int w, int h, std::string name);
-		~VulkanSystem();
+		Vulkan(std::shared_ptr<EntityComponentSystem> parentEcs, int w, int h, std::string name);
+		~Vulkan();
 
 		virtual void update();
 
@@ -167,7 +167,6 @@ namespace engine {
         void endSingleTimeCommands(VkCommandBuffer commandBuffer);
         void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
         void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
-        VkSampleCountFlagBits getMaxUsableSampleCount();
         void createImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
         VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels);
         VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
@@ -177,7 +176,9 @@ namespace engine {
         VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
         VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
         VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+
         SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
+        VkSampleCountFlagBits getMaxUsableSampleCount();
         bool isDeviceSuitable(VkPhysicalDevice device);
         bool checkDeviceExtensionSupport(VkPhysicalDevice device);
         QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
