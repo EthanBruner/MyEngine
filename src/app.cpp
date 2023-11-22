@@ -10,11 +10,11 @@ void App::run() {
 
     scene.createEntity(Mesh("assests/viking_room.obj"), Texture("assests/viking_room.png"), Transform());
 
-    scene.insertSystem<ResourceManager>();
-    scene.insertSystem<Vulkan>(800, 600, "Default Window");
+    scene.setMainSystem<VulkanSystem>(800, 600, "A Vulkan Window");
+
 
     auto mainLoop = [&]() {
         scene.update();
     };
-    scene.getSystem<Vulkan>()->loop(mainLoop);
+    scene.feedMainSystemLoop(mainLoop);
 }

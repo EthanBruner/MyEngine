@@ -1,18 +1,30 @@
 #pragma once
 
 #include <memory>
+#include <functional>
 
 namespace engine {
 	
-	class EntityComponentSystem;
+	class SystemMediator;
 
 	class System {
 	public:
-		System(std::shared_ptr<EntityComponentSystem> parentEcs) : ecs{ parentEcs } {};
+
+		void bindMediator(std::shared_ptr<SystemMediator> sysMediator) {
+			mediator = sysMediator;
+		}
+
 		virtual void update() = 0;
+
 	protected:
-		// NOTE: ecs fuctions cannot be called inside System because they dont exist yet
-		std::shared_ptr<engine::EntityComponentSystem> ecs;
+		std::shared_ptr<SystemMediator> mediator;
+	};
+
+	
+
+	class MainSystem : public System {
+	public:
+		virtual void loop(std::function<void()> func) = 0;
 	};
 
 }

@@ -15,7 +15,7 @@ namespace engine {
         glm::vec2 texCoord;
         glm::vec3 color;
 
-        
+        // Vulkan Functions
         static VkVertexInputBindingDescription getBindingDescription() {
             VkVertexInputBindingDescription bindingDescription{};
             bindingDescription.binding = 0;
@@ -24,7 +24,7 @@ namespace engine {
 
             return bindingDescription;
         }
-        
+
         static std::array<VkVertexInputAttributeDescription, 4> getAttributeDescriptions() {
             std::array<VkVertexInputAttributeDescription, 4> attributeDescriptions
             {{
@@ -45,9 +45,9 @@ namespace engine {
 
     struct MeshObj {
         uint32_t vertexStart;
-        uint32_t vertexCount;
+        uint32_t vertexEnd;
         uint32_t indexStart;
-        uint32_t indexCount;
+        uint32_t indexEnd;
     };
     
 

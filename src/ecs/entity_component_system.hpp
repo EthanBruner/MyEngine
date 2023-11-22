@@ -15,8 +15,10 @@ namespace engine {
 
 	class EntityComponentSystem {
 	public:
-		EntityComponentSystem() : componentContainerPool{ std::make_shared<ContainerPool>() } {};
+
+		EntityComponentSystem();
 		~EntityComponentSystem() {};
+
 
 		// --- Entity Functions --- //
 		template<typename... T>
@@ -41,18 +43,7 @@ namespace engine {
 		}
 
 
-		void removeEntity(Entity entity) {
-			assertEntityExists(entity);
-
-			entities.erase(std::find(entities.begin(), entities.end(), entity));
-			freeEntities.emplace_back(entity);
-
-			for (auto& [id, containerType] : entityOwnershipMap[entity]) {
-				getComponentContainer(containerType)->remove(id);
-				componentToEntityMap.erase(id);
-			}
-			entityOwnershipMap.erase(entity);
-		}
+		void removeEntity(Entity entity);
 
 
 		// --- Component Functions --- //
@@ -63,43 +54,33 @@ namespace engine {
 			}(), ...);
 		}
 
-		template<typename T>
-		ComponentMap<T>& retrieveComponents() {
-			auto container = getComponentContainer<T>();
-			return container->getComponents();
-		}
-
-
 
 		// ---  System Functions ---- //
-
-		// NOTE: Expects arguments required to construct system excluding ecs pointer (should be first parameter of subsystem constructor)
 		template <typename T, typename... SysArgs>
 		void insertSystem(SysArgs... args) {
-			auto parentEcs = std::make_shared<EntityComponentSystem>(*this);
-			std::shared_ptr<System> system = std::static_pointer_cast<System>(std::make_shared<T>(parentEcs, std::forward<SysArgs>(args)...));
+			auto name = getTypeName<T>();
 
-			systems.emplace(getTypeName<T>(), system);
-		}
-
-
-		template<typename T>
-		std::shared_ptr<T> getSystem() {
-			auto sysName = getTypeName<T>();
-			if (systems.find(sysName) == systems.end()) {
-				throw std::runtime_error("EntityComponentSystemError: cannot get a system that does not exist...");
-			}
+			if (systems.find(name) != systems.end()) {
+				throw std::runtime_error("EntityComponentSystemError: cannot insert multiple of a system type...");
+			} 
 			else {
-				return std::static_pointer_cast<T>(systems.at(sysName));
+				std::shared_ptr<System> system = std::static_pointer_cast<System>(std::make_shared<T>(std::forward<SysArgs>(args)...));
+				system->bindMediator(systemMediator);
+				systems.emplace(name, system);
 			}
 		}
+		
 
-
-		void update() {
-			for (auto&[key, sys] : systems) {
-				sys->update();
-			}
+		template <typename T, typename... SysArgs>
+		void setMainSystem(SysArgs... args) {
+			insertSystem<T>(std::forward<SysArgs>(args)...);
+			mainSys = getTypeName<T>();
 		}
+
+		
+		void feedMainSystemLoop(std::function<void()> func);
+		void update();
+		
 
 	private:
 		// --- Entity Members --- //
@@ -113,15 +94,15 @@ namespace engine {
 		std::vector<ComponentId> freeComponentIds{};
 
 		// --- System Members --- //
+		friend class SystemMediator;
+		std::shared_ptr<SystemMediator> systemMediator;
+
+		SystemTypeName mainSys;
 		std::unordered_map<SystemTypeName, std::shared_ptr<System>> systems{};
 
-
-
+		
+		
 		// --- Private Functions --- // 
-		void assertEntityExists(Entity entity) {
-			assert(std::find(entities.begin(), entities.end(), entity) != entities.end() && "EntityComponentSystemError: entity does not exist ");
-		}
-
 
 		template<typename T>
 		void bindComponent(Entity entity, T component) {
@@ -158,12 +139,6 @@ namespace engine {
 		}
 
 
-		Entity& findComponentOwner(ComponentId id) {
-			assert(componentToEntityMap.find(id) != componentToEntityMap.end() && "EntityComponentManagerError: Cannot find the owner of an unbinded component...");
-			return componentToEntityMap[id];
-		}
-
-
 		template<typename T>
 		std::shared_ptr<ComponentContainer<T>> getComponentContainer() {
 			const char* containerType = getTypeName<T>();
@@ -178,5 +153,9 @@ namespace engine {
 		std::shared_ptr<ComponentContainer<std::any>> getComponentContainer(ContainerTypeName containerType) {
 			return std::static_pointer_cast<ComponentContainer<std::any>>(componentContainerPool->at(containerType));
 		}
+
+
+		void assertEntityExists(Entity entity);
+		Entity& findComponentOwner(ComponentId id);
 	};
 }
