@@ -9,14 +9,14 @@
 
 namespace engine {
 
-	class Renderer {
+	class VulkanRenderer {
 	public:
-		Renderer(VulkanCoreContext& vulkanContext, Window& vulkanWindow);
-		~Renderer();
+		VulkanRenderer(VulkanCoreConstruct& vulkanContext, Window& vulkanWindow);
+		~VulkanRenderer();
 
 		// Delete copy constructor and copy assignment opperators
-		Renderer(const Renderer&) = delete;
-		Renderer& operator=(const Renderer&) = delete;
+		VulkanRenderer(const VulkanRenderer&) = delete;
+		VulkanRenderer& operator=(const VulkanRenderer&) = delete;
 
 		VkRenderPass getSwapChainRenderPass() const { return vulkanSwapChain->getRenderPass(); }
 		float getAspectRatio() const { return vulkanSwapChain->extentAspectRatio(); }
@@ -40,7 +40,7 @@ namespace engine {
 
 	private:
 		Window& window;
-		VulkanCoreContext& vulkanContext;
+		VulkanCoreConstruct& vulkanContext;
 
 		std::unique_ptr<VulkanSwapChain> vulkanSwapChain;
 		std::vector<VkCommandBuffer> commandBuffers;

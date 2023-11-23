@@ -17,7 +17,7 @@ namespace engine {
 
 
 
-	SimpleRenderSystem::SimpleRenderSystem(VulkanCoreContext& vulkanContext, RenderPass& renderPass) : device{ vulkanContext.getDevice() } {
+	SimpleRenderSystem::SimpleRenderSystem(VulkanCoreConstruct& vulkanContext, VkRenderPass renderPass) : device{ vulkanContext.getDevice() } {
 		createPipelineLayout();
 		createPipeline(renderPass);
 	}
@@ -49,13 +49,13 @@ namespace engine {
 	};
 
 
-	void SimpleRenderSystem::createPipeline(RenderPass& renderPass) {
+	void SimpleRenderSystem::createPipeline(VkRenderPass renderPass) {
 		PipelineConfigInfo pipelineConfig{};
 		VulkanPipeline::defaultConfigInfo(pipelineConfig);
-		pipelineConfig.renderPass = &renderPass;
+		pipelineConfig.renderPass = renderPass;
 		pipelineConfig.pipelineLayout = pipelineLayout;
 
-		vulkanPipeline = std::make_unique<VulkanPipeline>( device, "shaders/simple.vert.spv", "shaders/simple.frag.spv", pipelineConfig);
+		vulkanPipeline = std::make_unique<VulkanPipeline>( device, "shaders/vert.spv", "shaders/frag.spv", pipelineConfig);
 	};
 
 

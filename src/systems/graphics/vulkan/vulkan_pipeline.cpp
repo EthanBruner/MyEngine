@@ -15,8 +15,11 @@ using namespace engine;
 	VulkanPipeline::~VulkanPipeline() {
 		vkDestroyShaderModule(device, vertShaderMoudule, nullptr);
 		vkDestroyShaderModule(device, fragShaderMoudule, nullptr);
+        vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
+        vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
 		vkDestroyPipeline(device, graphicsPipeline, nullptr);
 	}
+
 
 	void VulkanPipeline::bind(VkCommandBuffer commandBuffer) {
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
@@ -105,10 +108,11 @@ using namespace engine;
         rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
         rasterizer.depthBiasEnable = VK_FALSE;
 
+        // TODO: make configurable
         VkPipelineMultisampleStateCreateInfo multisampling{};
         multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
         multisampling.sampleShadingEnable = VK_FALSE;
-        multisampling.rasterizationSamples = configInfo.renderPass->getMsaaSampleCount();
+        multisampling.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
 
         VkPipelineDepthStencilStateCreateInfo depthStencil{};
         depthStencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
@@ -164,7 +168,7 @@ using namespace engine;
         pipelineInfo.pColorBlendState = &colorBlending;
         pipelineInfo.pDynamicState = &dynamicState;
         pipelineInfo.layout = pipelineLayout;
-        pipelineInfo.renderPass = configInfo.renderPass->getRenderPass();
+        pipelineInfo.renderPass = configInfo.renderPass;
         pipelineInfo.subpass = configInfo.subpassCount;
         pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 

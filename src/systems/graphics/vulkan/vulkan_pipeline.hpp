@@ -23,7 +23,7 @@ namespace engine {
 		std::vector<VkDynamicState> dynamicStateEnables;
 		VkPipelineDynamicStateCreateInfo dynamicStateInfo;
 
-		RenderPass* renderPass = nullptr;
+		VkRenderPass renderPass = nullptr;
 		VkPipelineLayout pipelineLayout = nullptr;
 		uint32_t subpassCount = 0;
 	};

@@ -16,8 +16,8 @@ namespace engine {
     public:
         static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
-        VulkanSwapChain(VulkanCoreContext& vulkanContext, Window& window);
-        VulkanSwapChain(VulkanCoreContext& vulkanContext, Window& window, std::shared_ptr<VulkanSwapChain> previous);
+        VulkanSwapChain(VulkanCoreConstruct& vulkanContext, Window& window);
+        VulkanSwapChain(VulkanCoreConstruct& vulkanContext, Window& window, std::shared_ptr<VulkanSwapChain> previous);
         ~VulkanSwapChain();
 
         VulkanSwapChain(const VulkanSwapChain&) = delete;
@@ -45,7 +45,7 @@ namespace engine {
         }
 
     private:
-        VulkanCoreContext& vulkanContext;
+        VulkanCoreConstruct& vulkanContext;
         VkExtent2D windowExtent;
 
         VkFormat swapChainImageFormat;

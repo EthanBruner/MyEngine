@@ -11,14 +11,14 @@
 
 using namespace engine;
 
-VulkanSwapChain::VulkanSwapChain(VulkanCoreContext& vulkanContext, Window& window) : 
+VulkanSwapChain::VulkanSwapChain(VulkanCoreConstruct& vulkanContext, Window& window) : 
     vulkanContext { vulkanContext }, 
     windowExtent{ VkExtent2D{window.width(), window.height()} }
 {
     init();
 }
 
-VulkanSwapChain::VulkanSwapChain(VulkanCoreContext& vulkanContext, Window& window, std::shared_ptr<VulkanSwapChain> previous):
+VulkanSwapChain::VulkanSwapChain(VulkanCoreConstruct& vulkanContext, Window& window, std::shared_ptr<VulkanSwapChain> previous):
     vulkanContext{ vulkanContext },
     windowExtent{ VkExtent2D{window.width(), window.height()} },
     oldSwapChain{previous}

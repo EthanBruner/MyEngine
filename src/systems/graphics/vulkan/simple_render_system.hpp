@@ -12,7 +12,7 @@ namespace engine {
 
 	class SimpleRenderSystem {
 	public:
-		SimpleRenderSystem(VulkanCoreContext& vulkanContext, RenderPass& renderPass);
+		SimpleRenderSystem(VulkanCoreConstruct& vulkanContext, VkRenderPass renderPass);
 		~SimpleRenderSystem();
 
 		// Delete copy constructor and copy assignment opperators
@@ -23,7 +23,7 @@ namespace engine {
 		//void renderObjects(VkCommandBuffer commandBuffer, std::vector<Object> &objects, const Camera& camera);
 	private:
 		void createPipelineLayout();
-		void createPipeline(RenderPass& renderPass);
+		void createPipeline(VkRenderPass renderPass);
 
 		VkDevice device;
 		std::unique_ptr<VulkanPipeline> vulkanPipeline;

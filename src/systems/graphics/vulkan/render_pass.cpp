@@ -2,8 +2,8 @@
 
 using namespace engine;
 
-RenderPass::RenderPass(VulkanCoreContext& vulkanContext, VulkanSwapChain& swapChain): 
-    vulkanContext{vulkanContext},
+RenderPass::RenderPass(VkDevice device, VulkanSwapChain& swapChain): 
+    device{device},
     swapChain{swapChain}
 {
     createRenderPass();
@@ -77,7 +77,7 @@ void RenderPass::createRenderPass() {
     renderPassInfo.dependencyCount = 1;
     renderPassInfo.pDependencies = &dependency;
 
-    if (vkCreateRenderPass(vulkanContext.getDevice(), &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS) {
+    if (vkCreateRenderPass(device, &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS) {
         throw std::runtime_error("failed to create render pass!");
     }
 }

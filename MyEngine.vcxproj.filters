@@ -27,28 +27,28 @@
     <ClCompile Include="src\ecs\entity_component_system.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\systems\vulkan\window.cpp">
+    <ClCompile Include="src\systems\graphics\vulkan\window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\systems\vulkan\vulkan_system.cpp">
+    <ClCompile Include="src\systems\graphics\vulkan\vulkan_system.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\systems\vulkan\vulkan_core_context.cpp">
+    <ClCompile Include="src\systems\graphics\vulkan\vulkan_core_context.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\systems\vulkan\simple_render_system.cpp">
+    <ClCompile Include="src\systems\graphics\vulkan\vulkan_pipeline.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\systems\vulkan\vulkan_pipeline.cpp">
+    <ClCompile Include="src\systems\graphics\vulkan\swap_chain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\systems\vulkan\swap_chain.cpp">
+    <ClCompile Include="src\systems\graphics\vulkan\renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\systems\vulkan\render_pass.cpp">
+    <ClCompile Include="src\systems\graphics\vulkan\simple_render_system.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\systems\vulkan\renderer.cpp">
+    <ClCompile Include="src\systems\graphics\vulkan\render_pass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -71,40 +71,34 @@
     <ClInclude Include="src\ecs\utils.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\systems\systems_utils.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\systems\test_system.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\ecs\system_mediator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\systems\vulkan\window.hpp">
+    <ClInclude Include="src\systems\graphics\vulkan\window.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\systems\vulkan\vulkan_system.hpp">
+    <ClInclude Include="src\systems\graphics\vulkan\vulkan_system.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\systems\vulkan\vulkan_core_context.hpp">
+    <ClInclude Include="src\systems\graphics\vulkan\vulkan_core_context.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\systems\vulkan\graphics_objects.hpp">
+    <ClInclude Include="src\systems\graphics\vulkan\graphics_objects.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\systems\vulkan\simple_render_system.hpp">
+    <ClInclude Include="src\systems\graphics\vulkan\vulkan_pipeline.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\systems\vulkan\vulkan_pipeline.hpp">
+    <ClInclude Include="src\systems\graphics\vulkan\swap_chain.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\systems\vulkan\swap_chain.hpp">
+    <ClInclude Include="src\systems\graphics\vulkan\renderer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\systems\vulkan\render_pass.hpp">
+    <ClInclude Include="src\systems\graphics\vulkan\simple_render_system.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\systems\vulkan\renderer.hpp">
+    <ClInclude Include="src\systems\graphics\vulkan\render_pass.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

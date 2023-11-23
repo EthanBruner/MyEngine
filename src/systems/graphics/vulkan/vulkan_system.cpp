@@ -2,14 +2,11 @@
 
 using namespace engine;
 
-
 VulkanSystem::VulkanSystem(int windowWidth, int windowHeight, std::string windowName) : window { windowWidth, windowHeight, windowName } {
-
 }
 
 
 VulkanSystem::~VulkanSystem() {
-
 }
 
 

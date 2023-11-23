@@ -5,16 +5,22 @@
 
 namespace engine {
 
+	enum RenderPassAttachmentFlag {
+		COLOR_ATTACHMENT = 1,
+		COLOR_RESOLVE_ATTACHMENT = 2,
+		DEPTH_ATTACHMENT = 4,
+	};
+
 	class RenderPass {
 	public:
 
-		RenderPass(VulkanCoreContext& vulkanContex, VulkanSwapChain& swapChain);
+		RenderPass(VkDevice device, VulkanSwapChain& swapChain);
 
 		VkRenderPass& getRenderPass() { return renderPass; }
 		VkSampleCountFlagBits getMsaaSampleCount() { return msaaSampleCount; }
 
 	private:
-		VulkanCoreContext& vulkanContext;
+		VkDevice device;
 		VulkanSwapChain& swapChain;
 
 		VkRenderPass renderPass;

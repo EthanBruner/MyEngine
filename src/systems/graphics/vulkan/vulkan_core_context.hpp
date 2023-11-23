@@ -1,7 +1,6 @@
 #pragma once
 
 #include "window.hpp"
-//#include "swap_chain.hpp"
 
 #include <vulkan/vulkan.hpp>
 
@@ -27,32 +26,34 @@ struct QueueFamilyIndices {
 };
 
 
-class VulkanCoreContext {
+
+// Handles the initialization of a vulkan instance and acts as the iterface to the graphics device
+class VulkanCoreConstruct {
  public:
-  #ifdef NDEBUG
-  const bool enableValidationLayers = false;
-  #else
-  const bool enableValidationLayers = true;
-  #endif
+	#ifdef NDEBUG
+	const bool enableValidationLayers = false;
+	#else
+	const bool enableValidationLayers = true;
+	#endif
 
-  VulkanCoreContext(Window &window);
-  ~VulkanCoreContext();
+  VulkanCoreConstruct(Window &window);
+  ~VulkanCoreConstruct();
 
-  VulkanCoreContext(const VulkanCoreContext &) = delete;
-  void operator=(const VulkanCoreContext &) = delete;
-  VulkanCoreContext(VulkanCoreContext &&) = delete;
-  VulkanCoreContext &operator=(VulkanCoreContext &&) = delete;
+  VulkanCoreConstruct(const VulkanCoreConstruct &) = delete;
+  void operator=(const VulkanCoreConstruct &) = delete;
+  VulkanCoreConstruct(VulkanCoreConstruct &&) = delete;
+  VulkanCoreConstruct &operator=(VulkanCoreConstruct &&) = delete;
 
 
   // --- Getter Fuctions --- //
+  VkSurfaceKHR getSurface() { return surface; }
   VkCommandPool getCommandPool() { return commandPool; }
   VkDevice getDevice() const { return device; }
-  VkSurfaceKHR getSurface() { return surface; }
   VkQueue getGraphicsQueue() { return graphicsQueue; }
   VkQueue getPresentQueue() { return presentQueue; }
+  SwapChainSupportDetails getSwapChainSupport() { return querySwapChainSupport(physicalDevice); }
 
   // --- Infomation  --- //
-  SwapChainSupportDetails getSwapChainSupport() { return querySwapChainSupport(physicalDevice); }
   uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
   QueueFamilyIndices findPhysicalQueueFamilies() { return findQueueFamilies(physicalDevice); }
   VkFormat findSupportedFormat(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
@@ -71,12 +72,14 @@ class VulkanCoreContext {
 
 
 private:
-	const std::vector<const char *> validationLayers = {"VK_LAYER_KHRONOS_validation"};
-	const std::vector<const char *> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 	Window &window;
+
 	VkInstance instance;
 	VkSurfaceKHR surface;
 	VkDebugUtilsMessengerEXT debugMessenger;
+	const std::vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
+	const std::vector<const char*> deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+
 
 	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
 	VkDevice device;
@@ -87,6 +90,13 @@ private:
 
 	VkCommandPool commandPool;
 
+	VkBuffer vertexBuffer;
+	VkDeviceMemory vertexMemory;
+
+	VkBuffer indexBuffer;
+	VkDeviceMemory indexMemory;
+
+
 	void createInstance();
 	void setupDebugMessenger();
 	void createSurface();
@@ -96,7 +106,11 @@ private:
 
 	void createCommandPool();
 
+	void createMemoryBuffers();
+
 	// helper functions
+	void freeBuffer(VkBuffer buffer, VkDeviceMemory memory);
+
 	bool isDeviceSuitable(VkPhysicalDevice device);
 	std::vector<const char *> getRequiredExtensions();
 	bool checkValidationLayerSupport();
