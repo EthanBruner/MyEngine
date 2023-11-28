@@ -24,7 +24,7 @@ namespace engine {
         void operator=(const VulkanSwapChain&) = delete;
 
         VkFramebuffer getFrameBuffer(int index) { return swapChainFramebuffers[index]; }
-        VkRenderPass getRenderPass() { return renderPass; }
+        VkRenderPass getRenderPass() { return firstPass; }
         VkImageView getImageView(int index) { return swapChainImageViews[index]; }
         size_t imageCount() { return swapChainImages.size(); }
         VkFormat getSwapChainImageFormat() { return swapChainImageFormat; }
@@ -48,21 +48,23 @@ namespace engine {
         VulkanCoreConstruct& vulkanContext;
         VkExtent2D windowExtent;
 
+        VkSwapchainKHR swapChain;
+        std::shared_ptr<VulkanSwapChain> oldSwapChain;
+
         VkFormat swapChainImageFormat;
         VkFormat swapChainDepthFormat;
         VkExtent2D swapChainExtent;
 
         std::vector<VkFramebuffer> swapChainFramebuffers;
-        VkRenderPass renderPass;
+        VkRenderPass firstPass;
+        VkRenderPass secondPass;
+        VkSampleCountFlagBits msaaSampleCount = VK_SAMPLE_COUNT_4_BIT;
 
+        std::vector<VkImage> swapChainImages;
+        std::vector<VkImageView> swapChainImageViews;
         std::vector<VkImage> depthImages;
         std::vector<VkDeviceMemory> depthImageMemorys;
         std::vector<VkImageView> depthImageViews;
-        std::vector<VkImage> swapChainImages;
-        std::vector<VkImageView> swapChainImageViews;
-
-        VkSwapchainKHR swapChain;
-        std::shared_ptr<VulkanSwapChain> oldSwapChain;
 
         std::vector<VkSemaphore> imageAvailableSemaphores;
         std::vector<VkSemaphore> renderFinishedSemaphores;
@@ -75,7 +77,9 @@ namespace engine {
         void createSwapChain();
         void createImageViews();
         void createDepthResources();
-        void createRenderPass();
+
+        void createRenderPass(VkRenderPass& renderPass);
+
         void createFramebuffers();
         void createSyncObjects();
 

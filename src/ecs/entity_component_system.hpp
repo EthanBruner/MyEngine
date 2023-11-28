@@ -27,6 +27,7 @@ namespace engine {
 			// Create a id to represent the entity
 			if (!freeEntities.empty()) {
 				newEntity = freeEntities.back();
+				entities.emplace(newEntity);
 				freeEntities.pop_back();
 			}
 			else {
@@ -36,7 +37,6 @@ namespace engine {
 
 			entityOwnershipMap.emplace(newEntity, std::unordered_map<ComponentId, ContainerTypeName>());
 
-			// iter & bind components
 			([&] { bindComponent(newEntity, comps); } (), ...);
 
 			return entities.back();
@@ -49,7 +49,7 @@ namespace engine {
 		// --- Component Functions --- //
 		template<typename... T>
 		void registerComponents() {
-			([&] { 
+			([] { 
 				componentContainerPool->emplace(getTypeName<T>(), std::make_shared<ComponentContainer<T>>());
 			}(), ...);
 		}
@@ -76,13 +76,12 @@ namespace engine {
 			insertSystem<T>(std::forward<SysArgs>(args)...);
 			mainSys = getTypeName<T>();
 		}
-
 		
 		void feedMainSystemLoop(std::function<void()> func);
 		void update();
 		
 
-	private:
+		private:
 		// --- Entity Members --- //
 		std::vector<Entity> entities{};
 		std::vector<Entity> freeEntities{};
